@@ -19,7 +19,7 @@ export default {
         brandYellowDark: "#A65D05",
         brandRed: "#BF3326",
         brandGray: "#F2F2F2",
-
+        
         brandPurple: "#9941BF", //30%
         brandDarkPurple: "#3C308C",
         brandYellow: "#F2B705", //10%
@@ -48,6 +48,9 @@ export default {
         roboto: ["Roboto", "sans-serif"],
         openSans: ["Open Sans", "sans-serif"],
         // Add other trending fonts here
+      },
+      textColor: {
+        DEFAULT: '#6B7280', 
       },
     },
   },
