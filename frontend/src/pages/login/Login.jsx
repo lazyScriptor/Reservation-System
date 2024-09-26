@@ -4,23 +4,36 @@ import loginbackground from "../../assets/loginbackground.png";
 import loginmainimage from "../../assets/loginmainimage.png";
 import InputFieldCustomized from "../../ReUsableComponents/InputFieldCustomized";
 
-function Login() {
+export default function Login() {
+  const handleLogin=()=>{
+    
+  }
   return (
     <div class="h-screen w-full bg-brandPale relative">
-      <img
-        src={loginbackground}
-        alt=""
-        className="absolute z-10 blur-md w-[50%] max-h-screen"
-      />
-      <img
-        src={loginbackground}
-        alt=""
-        className="absolute z-10 blur-md w-[50%] right-0 max-h-screen"
-      />
+      <div
+        className="absolute inset-0 z-10 bg-cover bg-repeat-y blur-md"
+        style={{
+          backgroundImage: `url(${loginbackground})`,
+          backgroundSize: "50% auto", // Set 50% width and automatic height
+          backgroundPosition: "left", // Position the image to the left
+        }}
+      ></div>
+      <div
+        className="absolute inset-0 z-10 bg-cover bg-repeat-y blur-md"
+        style={{
+          backgroundImage: `url(${loginbackground})`,
+          backgroundSize: "50% auto",
+          backgroundPosition: "right", // Position the image to the right
+        }}
+      ></div>
       <div class="container h-screen flex items-center z-20">
         <div className="grid grid-cols-1 md:grid-cols-2 container bg-white py-8 rounded-lg shadow-lg shadow-gray-500/50 px-12 max-w-[1000px] z-10">
-          <div className="flex flex-col gap-8">
-            <img src={logo} alt="" className="w-12 md:w-16 lg:w-18" />
+          <div className="flex flex-col gap-8 max-w-[80%]">
+            {/* Logo sxtion */}
+            <div className="flex items-center gap-4 text-gray-700">
+              <img src={logo} alt="" className="w-12 md:w-16 lg:w-18" />
+              <h2 className="">Court Reservation System</h2>
+            </div>
 
             {/* title and textfields */}
             <div>
@@ -32,8 +45,8 @@ function Login() {
               </div>
 
               {/* login button div */}
-              <div className="flex justify-center">
-                <button className="p-2 bg-brandOrange px-10 rounded-lg font-bold text-white">
+              <div className="flex justify-center ">
+                <button className="p-2 bg-brandOrange/80 hover:bg-brandOrange transition-colors duration-200 px-10 rounded-lg font-bold text-white">
                   LOGIN
                 </button>
               </div>
@@ -50,7 +63,7 @@ function Login() {
             </div>
           </div>
           <div className="pl-4 md:flex justify-center hidden ">
-            <div className="bg-brandPale md:rounded-lg w-full ">
+            <div className="bg-brandPale md:rounded-md w-full ">
               <img src={loginmainimage} alt="" className="max-h-[430px] " />
             </div>
           </div>
@@ -59,5 +72,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;
