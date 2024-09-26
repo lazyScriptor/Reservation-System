@@ -7,13 +7,12 @@ const someOtherPlaintextPassword = "not_bacon";
 
 export const authorizeCheck = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const hash = bcrypt.hashSync("123", saltRounds);
 
+    const { email, password } = req.body;
     const response = await getUserCredentials(email);
     const userData = response[0];
     if (userData) {
-      if (bcrypt.compareSync("123", hash)) {
+      if (bcrypt.compareSync(password, userData.password)) {
         const token = jwt.sign(
           {
             data: userData,
@@ -31,7 +30,7 @@ export const authorizeCheck = async (req, res) => {
         return res.json({
           authorizationStatus: false,
           token: false,
-          message: "User found & Authorization failed",
+          message: "User found but Authorization failed",
           userFoundStatus: true,
         });
       }

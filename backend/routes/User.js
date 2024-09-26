@@ -7,6 +7,6 @@ router.get("/", (req, res) => {
   res.send("In the user route base");
 });
 
-router.get("/authorize-check", authorizeCheck);
+router.post("/authorize-check", authorizeCheck);
 
 export default router;
