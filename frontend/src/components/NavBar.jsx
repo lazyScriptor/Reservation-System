@@ -35,7 +35,7 @@ function NavBar() {
   return (
     <div className="bg-brandPale">
       <div className="container ">
-        <ul className="flex p-2 gap-4 ">
+        <ul className="flex p-1 gap-4 ">
           {buttonDetails.map((button, index) => (
             <li
               className="p-2 rounded-md text-brandOrange/60  font-semibold px-2 hover:text-brandOrange/75 active:text-brandOrange cursor-pointer transition-all duration-200"
