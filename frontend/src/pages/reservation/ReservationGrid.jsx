@@ -1,70 +1,89 @@
 import React, { useState } from "react";
 
-// Time and court data
-const hours = [
-  "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00",
-  "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"
-];
-const courts = ["Court 1", "Court 2", "Court 3", "Court 4", "Court 5", "Court 6"];
+const array1 = [1, 2, 3, 4, 5, 6, 7];
+const array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const cost = `$14`;
+const names = [`item1`, `item2`, `item3`, `item4`, `item5`, `item6`, 'item7'];
 
-const ReservationGrid = () => {
+function ReservationGrid() {
   // State to track selected slots
   const [selectedSlots, setSelectedSlots] = useState({});
 
-  // Toggle slot selection and log pressed slots
-  const toggleSlot = (court, time) => {
-    const slotKey = `${court}-${time}`;
+  // Toggle slot selection and log the pressed status
+  const toggleSlot = (rowIndex, colIndex) => {
+    const slotKey = `${rowIndex}-${colIndex}`;
+    const name = names[rowIndex - 1]; // Get the relevant name from names array
+    const array1Value = array1[rowIndex -1]; // Get the relevant value from array1
+
     setSelectedSlots((prevSelected) => {
       const updatedSelected = {
         ...prevSelected,
-        [slotKey]: !prevSelected[slotKey],
+        [slotKey]: !prevSelected[slotKey], // Toggle the current slot
       };
-      // Print the selected slots in the console
-      console.log("Selected slots:", updatedSelected);
+
+      // Log the selected slots and their status along with relevant name and array1 value
+      // console.log("Selected slots:", updatedSelected);
+      console.log("Relevant name:", name);
+      console.log("Relevant array1 value:", array1Value);
       return updatedSelected;
     });
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-auto ">
-      {/* Make the grid scrollable horizontally */}
-      <div className="grid grid-cols-[80px_repeat(15,minmax(20px,1fr))] min-w-[500px]">
-        {/* Header Row (Time Slots) */}
-        <div className="bg-gray-200 p-1 text-center font-bold text-xs">Court/Time</div>
-        {hours.map((time) => (
-          <div key={time} className="bg-gray-200 py-1 text-center text-xs">
-            {time}
-          </div>
-        ))}
-
-        {/* Rows for each court */}
-        {courts.map((court) => (
-          <React.Fragment key={court}>
-            {/* Court Name Column */}
-            <div className="bg-gray-100 p-1 text-center text-xs">
-              {court}
+    <div className="flex flex-col py-10 bg-gray-200 items-center rounded-lg">
+      {/* Row 1 */}
+      <div></div>
+      {/* Row 2 */}
+      <div className="flex justify-start">
+        {/* Row 2 column 1 */}
+        <div className="w-14">
+          {names.map((item, index) => (
+            <div key={index} className="w-14 aspect-square flex items-center justify-center">
+              {item}
             </div>
-            {/* Time Slot Columns */}
-            {hours.map((time) => {
-              const slotKey = `${court}-${time}`;
-              const isSelected = selectedSlots[slotKey] || false;
+          ))}
+        </div>
+        {/* Row 2 column 2 grid */}
+        <div
+          className="grid border rounded-md"
+          style={{
+            gridTemplateColumns: `repeat(${array2.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {array1.map((item1, rowIndex) =>
+            array2.map((item2, colIndex) => {
+              // Use rowIndex + 1 and colIndex + 1 to start from 1
+              const displayRowIndex = rowIndex + 1;
+              const displayColIndex = colIndex + 1;
+              const slotKey = `${displayRowIndex}-${displayColIndex}`;
+              const isSelected = selectedSlots[slotKey]; // Check if the slot is selected
               return (
                 <div
-                  key={time}
-                  className={`p-1 border hover:bg-blue-200 cursor-pointer text-xs ${
-                    isSelected ? "bg-blue-400 text-white" : "bg-white"
-                  }`}
-                  onClick={() => toggleSlot(court, time)}
+                  key={`${displayRowIndex}-${displayColIndex}`}
+                  className={`border rounded-lg aspect-square w-14 hover:bg-brandBlue/40 active:bg-brandBlue border-gray-300 p-2 transition-colors duration-100 cursor-pointer text-center ${
+                    isSelected ? "bg-brandBlue text-white" : ""
+                  }`} // Add styling if selected
+                  onClick={() => toggleSlot(item1, colIndex+1)} // Toggle slot on click
                 >
-                  {/* Time Slot */}
+                  {`${displayRowIndex}, ${displayColIndex}`} {/* Display indices starting from 1 */}
                 </div>
               );
-            })}
-          </React.Fragment>
-        ))}
+            })
+          )}
+        </div>
+      </div>
+
+      {/* Row 3 */}
+      <div className="flex py-4">
+        <div className="w-14"></div>
+        <div className="flex justify-start">
+          {array2.map((item, index) => (
+            <div key={index} className="flex justify-evenly w-14">{`${cost}`}</div>
+          ))}
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default ReservationGrid;
