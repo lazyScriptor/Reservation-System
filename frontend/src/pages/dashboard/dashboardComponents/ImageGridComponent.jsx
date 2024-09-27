@@ -11,7 +11,7 @@ function ImageGridComponent({ bgColor, heading, description, gridImage }) {
         <img
           src={gridImage}
           alt="Grid"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover rounded-ss-xl rounded-se-xl"
         />
       </div>
       <div className=" text-white">

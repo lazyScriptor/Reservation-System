@@ -18,18 +18,18 @@ const imageGridComponentDetails = [
     image: gridImage2, // Different image for this component
   },
   {
-    heading: "Sports Centers ",
+    heading: "Sports Centers Facilities",
     description: "Multi sport centres, playing fields, pools",
     image: gridImage3, // Different image for this component
   },
   {
-    heading: "Child Care",
+    heading: "Child Care on-site Experts",
     description:
       "Gym based child care, time based bookings, different age groups",
     image: gridImage4, // Different image for this component
   },
   {
-    heading: "Fitness Equipment",
+    heading: "Best Fitness Equipment",
     description:
       "XBody EMS Training, Vibrostation, Power Plate, VacuShape and more",
     image: gridImage5, // Different image for this component
