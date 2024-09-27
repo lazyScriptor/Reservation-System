@@ -18,7 +18,7 @@ export const authorizeCheck = async (req, res) => {
             data: userData,
           },
           "cricket",
-          { expiresIn: 60 * 60 }
+          { expiresIn: 60 * 60 }    
         );
         return res.json({
           authorizationStatus: true,

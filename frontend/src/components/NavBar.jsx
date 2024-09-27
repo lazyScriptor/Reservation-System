@@ -33,12 +33,12 @@ const buttonDetails = [
 
 function NavBar() {
   return (
-    <div className="bg-brandPale">
-      <div className="container ">
+    <div className="bg-gray-200">
+      <div className="container hidden md:flex overflow-auto">
         <ul className="flex p-1 gap-4 ">
           {buttonDetails.map((button, index) => (
             <li
-              className="p-2 rounded-md text-brandOrange/60  font-semibold px-2 hover:text-brandOrange/75 active:text-brandOrange cursor-pointer transition-all duration-200"
+              className="p-2 rounded-md text-brandBlueDark  font-semibold px-2 hover:text-brandBlueDark/55 active:text-brandBlueDark cursor-pointer transition-all duration-200"
               key={index}
             >
               {button.title}

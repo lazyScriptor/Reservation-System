@@ -46,7 +46,7 @@ export default function Login() {
       const authDetails = response.data;
       console.log(authDetails);
       if (authDetails.authorizationStatus) {
-        navigate("www.google.com");
+        navigate("/dashboard");
       } else {
         setErrorToogle(true);
         setErrorMessage(authDetails.message);
