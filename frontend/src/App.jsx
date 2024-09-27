@@ -4,7 +4,8 @@ import Login from "./pages/login/Login";
 import NavBar from "./components/NavBar";
 import Dashboard from "./pages/dashboard/Dashboard";
 import NavBarTop from "./components/NavBarTop";
-
+import Demo from "./pages/demo/Demo";
+import Reservation from "./pages/reservation/Reservation";
 function Layout() {
   const location = useLocation();
   return (
@@ -18,6 +19,26 @@ function Layout() {
               <NavBarTop />
               <NavBar />
               <Dashboard />
+            </>
+          }
+        />
+        <Route
+          path="/demo"
+          element={
+            <>
+              <NavBarTop />
+              <NavBar />
+              <Demo />
+            </>
+          }
+        />
+         <Route
+          path="/reservation"
+          element={
+            <>
+              <NavBarTop />
+              <NavBar />
+              <Reservation/>
             </>
           }
         />

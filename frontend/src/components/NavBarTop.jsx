@@ -3,7 +3,7 @@ import logo from "../assets/logo.png";
 function NavBarTop() {
   return (
     <div className="bg-gray-200">
-      <div className="container">
+      <div className="container py-2">
         <img src={logo} className="w-16" alt="" />
       </div>
     </div>

@@ -6,7 +6,7 @@ import Strip4 from './Strip4'
 
 export default function Dashboard() {
   return (
-    <div className=' bg-gray-200'>
+    <div className=' bg-gray-200 text-gray-700'>
       <Strip1/>
       <Strip2/>
       <Strip3/>

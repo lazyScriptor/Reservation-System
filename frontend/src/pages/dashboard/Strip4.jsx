@@ -8,13 +8,15 @@ function Strip4() {
           {/* Grid start */}
           <div className="grid grid-cols-1 md:grid-cols-3">
             {/* image part */}
-            <div>
+            <div className="flex items-center">
               <img src={strip4Image} alt="" />
             </div>
             {/* description part */}
             <div className="flex flex-col items-center col-span-2 py-4">
-              <h2 className="pb-4 text-2xl">About ... Reservation System</h2>
-              <hr className="border-2 rounded-full w-10 self-center  border-brandBlue " />
+              <div className="py-4 flex flex-col items-center">
+                <h2 className="pb-4 text-2xl">About ... Reservation System</h2>
+                <hr className="border-2 rounded-full w-10 self-center  border-brandBlue " />
+              </div>
               <div className="flex flex-col gap-4 ">
                 <p>
                   YepBooking system has been created to help gyms, sport centres
@@ -40,7 +42,7 @@ function Strip4() {
           {/* Down part */}
           <div className="py-8 w-full">
             <div className="container grid grid-cols-2 md:grid-cols-4 text-center">
-              <div className="border-r border-white p-4">
+              <div className="border-r border-l border-white p-4">
                 <h2 className="text-2xl font-semibold">Sri Lankan</h2>
                 <p className="uppercase ">Booking system</p>
               </div>
@@ -48,11 +50,11 @@ function Strip4() {
                 <h2 className="text-2xl font-semibold">100 +</h2>
                 <p className="uppercase ">Customers</p>
               </div>
-              <div className="border-r border-white p-4">
+              <div className="border-r border-l border-white p-4">
                 <h2 className="text-2xl font-semibold">15 + years</h2>
                 <p className="uppercase ">operating</p>
               </div>
-              <div className=" p-4">
+              <div className=" p-4 border-r border-white">
                 <h2 className="text-2xl font-semibold">150 000</h2>
                 <p className="uppercase ">Bookings per month</p>
               </div>

@@ -6,13 +6,18 @@ function Strip1() {
     <div className=" py-8 rounded-2xl ">
       <div className="container ">
         <div className="grid grid-cols-1 md:grid-cols-2 bg-gradient-to-r p-8 from-gray-800 to-gray-500 rounded-xl">
-          <div className=" text-white order-2 md:order-1">
+          <div className=" text-white order-2 md:order-1 flex flex-col justify-center items-start">
             <h2 className="text-2xl font-semibold">Booking system</h2>
             <h2 className="text-md font-semibold">
               for gyms, classes, creche and more
             </h2>
             <p className="py-4 text-xs text-ellipsis">
-              Easy to use and customisable online booking system you can trust{" "}
+              Discover an easy-to-use and customizable online booking system
+              designed to meet your unique needs. Our platform offers seamless
+              integration, robust features, and user-friendly interfaces,
+              ensuring a hassle-free experience for both you and your clients.
+              Trust our reliable solution to manage appointments, reservations,
+              and schedules effortlessly, boosting your business efficiency.
             </p>
 
             <Button1 content={"  Features and Functions"} />
