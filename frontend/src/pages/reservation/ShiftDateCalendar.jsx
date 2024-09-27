@@ -11,8 +11,8 @@ export default function ShiftDateCalendar() {
       <div className="w-full">
         <DatePicker
           defaultValue={dayjs(Date())}
-          className="w-full"
-          format="MMMM D, YYYY" // Display full month name
+          className=""
+          format="DD-MMMM-YYYY" // Display full month name
           renderInput={(params) => <TextField {...params} />}
         />
       </div>

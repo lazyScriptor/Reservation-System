@@ -1,5 +1,7 @@
 import React from "react";
 import ShiftDateCalendar from "./ShiftDateCalendar";
+import ReservationCategoryBar from './ReservationCategoryBar'
+import ReservationGrid from "./ReservationGrid";
 
 function ReservationBase() {
   return (
@@ -12,7 +14,7 @@ function ReservationBase() {
           </div>
           {/* Right bar */}
           <div className="col-span-2  p-4">
-            
+            <ReservationGrid/>
           </div>
         </div>
       </div>

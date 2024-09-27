@@ -16,21 +16,21 @@ function ReservationCategoryBar() {
       color: "error",
     },
   ]);
-  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
+  // const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
 
-  useEffect(() => {
-    console.log("object")
-    if (courtCreateForm && courtCreateForm.courtName) {
-      setButtonTypes((prev) => [
-        ...prev,
-        {
-          id: prev.length + 1, // Ensure unique ID
-          name: courtCreateForm.courtName,
-          color: "success",
-        },
-      ]);
-    }
-  }, [courtCreateForm]);
+  // useEffect(() => {
+  //   console.log("object")
+  //   if (courtCreateForm && courtCreateForm.courtName) {
+  //     setButtonTypes((prev) => [
+  //       ...prev,
+  //       {
+  //         id: prev.length + 1, // Ensure unique ID
+  //         name: courtCreateForm.courtName,
+  //         color: "success",
+  //       },
+  //     ]);
+  //   }
+  // }, [courtCreateForm]);
 
   const scrollRef = useRef(null);
 
