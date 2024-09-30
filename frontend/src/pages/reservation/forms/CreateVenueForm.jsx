@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized"; // Customize if needed
 import axios from "axios";
+import StepperHorizontal from "../../../components/StepperHorizontal";
 
 // Yup validation schema for the venue form
 const venueSchema = yup.object().shape({
@@ -37,6 +38,8 @@ export default function CreateVenueForm() {
 
   return (
     <div>
+
+      <StepperHorizontal color={'brandBlue'} number={1}/>
       <div className="container shadow-lg rounded-xl">
         <div className="p-4">
           <h2 className="text-xl">Create Venue</h2>
@@ -156,6 +159,8 @@ export default function CreateVenueForm() {
           </form>
         </div>
       </div>
+
+
     </div>
   );
 }

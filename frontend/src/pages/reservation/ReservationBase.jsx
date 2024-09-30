@@ -4,6 +4,7 @@ import ReservationCategoryBar from "./ReservationCategoryBar";
 import ReservationGrid from "./ReservationGrid";
 import CourtCreateFrom from "./forms/CourtCreateFrom";
 import StepperHorizontal from "../../components/StepperHorizontal";
+import CreateVenueForm from "./forms/CreateVenueForm";
 
 function ReservationBase() {
   return (
@@ -18,7 +19,8 @@ function ReservationBase() {
           <div className="col-span-2  p-4">
             {/* <ReservationGrid /> */}
             {/* <CourtCreateFrom /> */}
-            <StepperHorizontal/>
+            {/* <StepperHorizontal/> */}
+            <CreateVenueForm/>
           </div>
         </div>
       </div>

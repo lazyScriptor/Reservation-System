@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { CourtTypeContext } from "../../../contexts/Contexts";
 import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized";
 import axios from "axios";
+import StepperHorizontal from "../../../components/StepperHorizontal";
 // Yup validation schema
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
@@ -52,6 +53,7 @@ export default function CourtForm() {
 
   return (
     <div>
+      <StepperHorizontal number={2} color={"brandBlue"} />
       <div className="container shadow-lg rounded-xl">
         <div className="p-4 ">
           <h2 className="text-xl">Create Court type</h2>
