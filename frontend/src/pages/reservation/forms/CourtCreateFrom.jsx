@@ -3,14 +3,25 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { CourtTypeContext } from "../../../contexts/Contexts";
-import InputFieldCustomized from '../../../ReUsableComponents/InputFieldCustomized'
+import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized";
 // Yup validation schema
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
   courtType: yup.string().required("Court type is required"),
+  venueName: yup.string().required("Court type is required"),
   startTime: yup.string().required("Start time is required"),
   endTime: yup.string().required("End time is required"),
   noOfAreas: yup
+    .number()
+    .typeError("Must be a number")
+    .required("Number of areas is required")
+    .min(1, "Must have at least 1 area"),
+  costPerSlot: yup
+    .number()
+    .typeError("Must be a number")
+    .required("Number of areas is required")
+    .min(1, "Must have at least 1 area"),
+  intervalSize: yup
     .number()
     .typeError("Must be a number")
     .required("Number of areas is required")
@@ -32,7 +43,7 @@ function CourtForm() {
   const onSubmit = (data) => {
     setCourtCreateForm(data); // Update context state
   };
-  
+
   return (
     <div className="container shadow-lg rounded-xl">
       <div className="p-4 ">
@@ -46,7 +57,11 @@ function CourtForm() {
           {/* Court Name */}
           <div>
             <label>Court name</label>
-            <InputFieldCustomized type="text" name="courtName" register={register} />
+            <InputFieldCustomized
+              type="text"
+              name="courtName"
+              register={register}
+            />
             {errors.courtName && (
               <p className="text-red-500 h-6">{errors.courtName.message}</p>
             )}
@@ -69,17 +84,42 @@ function CourtForm() {
               <p className="text-red-500">{errors.courtType.message}</p>
             )}
           </div>
+          {/* Venue type */}
+          <div className="flex flex-col">
+            <label>Court type</label>
+            <select
+              {...register("venueName")}
+              className="border border-gray-300 p-1 pl-2 self-center rounded-md  w-full lg:max-w-xl"
+            >
+              <option value="">Select </option>{" "}
+              {/* Default unselected option */}
+              <option value={1}>Type 1</option>
+              <option value={2}>Type 2</option>
+              <option value={3}>Type 3</option>
+            </select>
+            {errors.courtType && (
+              <p className="text-red-500">{errors.courtType.message}</p>
+            )}
+          </div>
 
           {/* Time Selectors */}
           <div className="">
             <label>Start Time</label>
-            <InputFieldCustomized type="time" name="startTime" register={register} />
+            <InputFieldCustomized
+              type="time"
+              name="startTime"
+              register={register}
+            />
             {errors.startTime && (
               <p className="text-red-500">{errors.startTime.message}</p>
             )}
 
             <label>End Time</label>
-            <InputFieldCustomized type="time" name="endTime" register={register} />
+            <InputFieldCustomized
+              type="time"
+              name="endTime"
+              register={register}
+            />
             {errors.endTime && (
               <p className="text-red-500">{errors.endTime.message}</p>
             )}
@@ -91,6 +131,31 @@ function CourtForm() {
             <InputFieldCustomized
               type="number"
               name="noOfAreas"
+              register={register}
+            />
+            {errors.noOfAreas && (
+              <p className="text-red-500">{errors.noOfAreas.message}</p>
+            )}
+          </div>
+
+          {/* Cost per slot */}
+          <div>
+            <label>Cost per slot</label>
+            <InputFieldCustomized
+              type="number"
+              name="costPerSlot"
+              register={register}
+            />
+            {errors.noOfAreas && (
+              <p className="text-red-500">{errors.noOfAreas.message}</p>
+            )}
+          </div>
+          {/* Interval size */}
+          <div>
+            <label>Interval Size</label>
+            <InputFieldCustomized
+              type="number"
+              name="intervalSize"
               register={register}
             />
             {errors.noOfAreas && (

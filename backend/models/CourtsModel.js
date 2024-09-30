@@ -10,3 +10,10 @@ export const getUserCredentials = async (email) => {
     throw error;
   }
 };
+export const createCourtDetails = async (formData) => {
+  try {
+    
+  } catch (error) {
+    throw ("Error occured in courts model create courts details", error);
+  }
+};
