@@ -10,7 +10,7 @@ app.use(cors());
 
 app.use("/user", userRoute);
 app.use("/venue", venueRoute);
-app.use("/venue", courtsRoute);
+app.use("/court", courtsRoute);
 
 app.listen(3005, () => {
   console.log("Server starts on port 3005");

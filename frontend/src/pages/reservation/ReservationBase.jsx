@@ -3,6 +3,7 @@ import ShiftDateCalendar from "./ShiftDateCalendar";
 import ReservationCategoryBar from "./ReservationCategoryBar";
 import ReservationGrid from "./ReservationGrid";
 import CourtCreateFrom from "./forms/CourtCreateFrom";
+import StepperHorizontal from "../../components/StepperHorizontal";
 
 function ReservationBase() {
   return (
@@ -16,7 +17,8 @@ function ReservationBase() {
           {/* Right bar */}
           <div className="col-span-2  p-4">
             {/* <ReservationGrid /> */}
-            <CourtCreateFrom />
+            {/* <CourtCreateFrom /> */}
+            <StepperHorizontal/>
           </div>
         </div>
       </div>
