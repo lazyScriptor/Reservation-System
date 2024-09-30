@@ -7,9 +7,11 @@ const someOtherPlaintextPassword = "not_bacon";
 
 export const authorizeCheck = async (req, res) => {
   try {
-
     const { email, password } = req.body;
     const response = await getUserCredentials(email);
+    // bcrypt.hash("123", saltRounds, function (err, hash) {
+    //   console.log(hash);
+    // });
     const userData = response[0];
     if (userData) {
       if (bcrypt.compareSync(password, userData.password)) {
@@ -18,7 +20,7 @@ export const authorizeCheck = async (req, res) => {
             data: userData,
           },
           "cricket",
-          { expiresIn: 60 * 60 }    
+          { expiresIn: 60 * 60 }
         );
         return res.json({
           authorizationStatus: true,

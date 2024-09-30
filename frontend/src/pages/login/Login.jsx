@@ -44,15 +44,20 @@ export default function Login() {
         }
       );
       const authDetails = response.data;
-      console.log(authDetails);
+      console.log("dawd",authDetails);
       if (authDetails.authorizationStatus) {
         navigate("/dashboard");
-      } else {
+      } else if (!authDetails.authorizationStatus) {
         setErrorToogle(true);
         setErrorMessage(authDetails.message);
+      } else {
+        setErrorMessage("Some errors occured,Please try again shortly");
+        setErrorToogle(true);
       }
     } catch (error) {
-      console.error("Error during login:", error); // Handle errors appropriately
+      setErrorMessage(`Some errors occured,Please try again shortly : hint (${error.message})`);
+      setErrorToogle(true);
+      console.error("Error during login:", error.message); // Handle errors appropriately
     }
   };
 

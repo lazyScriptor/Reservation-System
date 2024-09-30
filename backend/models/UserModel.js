@@ -7,7 +7,7 @@ const pool = mysql
     host: "localhost",
     user: "root",
     password: "",
-    database: "reservation_system",
+    database: "reservation_system_new",
   })
   .promise();
 

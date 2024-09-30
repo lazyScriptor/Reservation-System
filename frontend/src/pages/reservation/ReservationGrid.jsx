@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const array1 = [1, 2, 3, 4, 5, 6, 7];
-const array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9,10];
 const cost = `$14`;
 const names = [`item1`, `item2`, `item3`, `item4`, `item5`, `item6`, 'item7'];
 
@@ -50,7 +50,7 @@ function ReservationGrid() {
             gridTemplateColumns: `repeat(${array2.length}, minmax(0, 1fr))`,
           }}
         >
-          {array1.map((item1, rowIndex) =>
+          {names.map((item1, rowIndex) =>
             array2.map((item2, colIndex) => {
               // Use rowIndex + 1 and colIndex + 1 to start from 1
               const displayRowIndex = rowIndex + 1;
