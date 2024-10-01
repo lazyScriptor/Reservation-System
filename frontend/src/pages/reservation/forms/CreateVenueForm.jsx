@@ -3,21 +3,28 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized"; // Customize if needed
+import { CourtTypeContext } from "../../../contexts/Contexts";
 import axios from "axios";
-import StepperHorizontal from "../../../components/StepperHorizontal";
 
 // Yup validation schema for the venue form
 const venueSchema = yup.object().shape({
-  venue_name: yup.string().required("Venue name is required").max(150, "Max 150 characters"),
-  venue_address: yup.string().required("Venue address is required"),
-  venue_description: yup.string(),
-  contact_info: yup.string().max(100, "Max 100 characters"),
-  opening_hours: yup.string().required("Opening hours are required"),
-  closing_hours: yup.string().required("Closing hours are required"),
-  status: yup.string().oneOf(['open', 'closed'], 'Invalid status').required("Status is required"),
+  venueName: yup
+    .string()
+    .required("Venue name is required")
+    .max(150, "Max 150 characters"),
+  venueAddress: yup.string().required("Venue address is required"),
+  venueDescription: yup.string(),
+  contactInfo: yup.string().max(100, "Max 100 characters"),
+  openingHours: yup.string().required("Opening hours are required"),
+  closingHours: yup.string().required("Closing hours are required"),
+  status: yup
+    .string()
+    .oneOf(["open", "closed"], "Invalid status")
+    .required("Status is required"),
 });
 
 export default function CreateVenueForm() {
+  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
   const {
     register,
     handleSubmit,
@@ -28,34 +35,43 @@ export default function CreateVenueForm() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data)
-    // try {
-    //   await axios.post(`${import.meta.env.VITE_API_URL}/venue/create-venue`, data);
-    // } catch (error) {
-    //   console.error("Error occurred during form r", error);
-    // }
+    setCourtCreateForm((prev) => ({
+      ...prev,
+      venueData: data,
+    }));
+   
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/venue/create-venue`,
+        data
+      );
+    } catch (error) {
+      console.error("Error occurred in form submit handler", error);
+      throw new Error("Error occurred in form submit handler", error); // Optional: rethrow or handle it
+    }
   };
 
   return (
     <div>
-
-      <StepperHorizontal color={'brandBlue'} number={1}/>
       <div className="container shadow-lg rounded-xl">
         <div className="p-4">
           <h2 className="text-xl">Create Venue</h2>
         </div>
         <div>
-          <form className="flex flex-col p-2 gap-2" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col p-2 gap-2"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             {/* Venue Name */}
             <div>
               <label>Venue Name</label>
               <InputFieldCustomized
                 type="text"
-                name="venue_name"
+                name="venueName"
                 register={register}
               />
-              {errors.venue_name && (
-                <p className="text-red-500 h-6">{errors.venue_name.message}</p>
+              {errors.venueName && (
+                <p className="text-red-500 h-6">{errors.venueName.message}</p>
               )}
             </div>
 
@@ -64,11 +80,13 @@ export default function CreateVenueForm() {
               <label>Venue Address</label>
               <InputFieldCustomized
                 type="text"
-                name="venue_address"
+                name="venueAddress"
                 register={register}
               />
-              {errors.venue_address && (
-                <p className="text-red-500 h-6">{errors.venue_address.message}</p>
+              {errors.venueAddress && (
+                <p className="text-red-500 h-6">
+                  {errors.venueAddress.message}
+                </p>
               )}
             </div>
 
@@ -77,11 +95,13 @@ export default function CreateVenueForm() {
               <label>Venue Description</label>
               <InputFieldCustomized
                 type="text"
-                name="venue_description"
+                name="venueDescription"
                 register={register}
               />
-              {errors.venue_description && (
-                <p className="text-red-500 h-6">{errors.venue_description.message}</p>
+              {errors.venueDescription && (
+                <p className="text-red-500 h-6">
+                  {errors.venueDescription.message}
+                </p>
               )}
             </div>
 
@@ -90,11 +110,11 @@ export default function CreateVenueForm() {
               <label>Contact Info</label>
               <InputFieldCustomized
                 type="text"
-                name="contact_info"
+                name="contactInfo"
                 register={register}
               />
-              {errors.contact_info && (
-                <p className="text-red-500 h-6">{errors.contact_info.message}</p>
+              {errors.contactInfo && (
+                <p className="text-red-500 h-6">{errors.contactInfo.message}</p>
               )}
             </div>
 
@@ -103,11 +123,13 @@ export default function CreateVenueForm() {
               <label>Opening Hours</label>
               <InputFieldCustomized
                 type="time"
-                name="opening_hours"
+                name="openingHours"
                 register={register}
               />
-              {errors.opening_hours && (
-                <p className="text-red-500 h-6">{errors.opening_hours.message}</p>
+              {errors.openingHours && (
+                <p className="text-red-500 h-6">
+                  {errors.openingHours.message}
+                </p>
               )}
             </div>
 
@@ -116,11 +138,13 @@ export default function CreateVenueForm() {
               <label>Closing Hours</label>
               <InputFieldCustomized
                 type="time"
-                name="closing_hours"
+                name="closingHours"
                 register={register}
               />
-              {errors.closing_hours && (
-                <p className="text-red-500 h-6">{errors.closing_hours.message}</p>
+              {errors.closingHours && (
+                <p className="text-red-500 h-6">
+                  {errors.closingHours.message}
+                </p>
               )}
             </div>
 
@@ -159,8 +183,6 @@ export default function CreateVenueForm() {
           </form>
         </div>
       </div>
-
-
     </div>
   );
 }

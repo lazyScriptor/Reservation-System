@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -31,6 +31,25 @@ const courtSchema = yup.object().shape({
 });
 
 export default function CourtForm() {
+  const [venues, setVenues] = useState([]);
+  useEffect(() => {
+    const fetchVenueNames = async () => {
+      try {
+        const id = localStorage.getItem("userId");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/venue/name/${id}`
+        );
+        console.log(response.data.Venues);
+        setVenues(response.data.Venues);
+      } catch (error) {
+        console.error("Error fetching venue names:", error);
+      }
+    };
+
+    fetchVenueNames();
+  }, []);
+
+
   const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
 
   const {
@@ -42,18 +61,27 @@ export default function CourtForm() {
     resolver: yupResolver(courtSchema),
   });
 
-  const onSubmit = (data) => {
-    setCourtCreateForm(data); // Update context state
+  const onSubmit = async (data) => {
+    setCourtCreateForm((prev) => ({
+      ...prev,
+      courtData: data,
+    }));
+
     try {
-      axios.post(`${import.meta.env.VITE_API_URL}/court/create-court`, data);
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/court/create-court`,
+        data
+      );
+      console.log("Court data submitted successfully");
     } catch (error) {
-      throw ("Error occured in form Submit handler", error);
+      console.error("Error occurred in form submit handler", error);
+      throw new Error("Error occurred in form submit handler", error); // Optional: rethrow or handle it
     }
   };
 
   return (
     <div>
-      <StepperHorizontal number={2} color={"brandBlue"} />
+      {/* <StepperHorizontal number={2} color={"brandBlue"} /> */}
       <div className="container shadow-lg rounded-xl">
         <div className="p-4 ">
           <h2 className="text-xl">Create Court type</h2>
@@ -95,16 +123,16 @@ export default function CourtForm() {
             </div>
             {/* Venue type */}
             <div className="flex flex-col">
-              <label>Venue type</label>
+              <label>Venue name</label>
               <select
                 {...register("venueName")}
                 className="border border-gray-300 p-1 pl-2 self-center rounded-md  w-full lg:max-w-xl"
               >
-                <option value="">Select </option>{" "}
-                {/* Default unselected option */}
-                <option value={1}>Type 1</option>
-                <option value={2}>Type 2</option>
-                <option value={3}>Type 3</option>
+                {venues && venues.map((venue, index) => (
+                
+                    <option key={index} value={1}>{venue}</option>
+                 
+                ))}
               </select>
               {errors.courtType && (
                 <p className="text-red-500">{errors.courtType.message}</p>

@@ -1,50 +1,47 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { getUserCredentials } from "../models/UserModel.js";
-const saltRounds = 10;
-const myPlaintextPassword = "s0//P4$$w0rD";
-const someOtherPlaintextPassword = "not_bacon";
+import { createVenueDetails, getVenuesFromId } from "../models/VenueModel.js";
 
-export const authorizeCheck = async (req, res) => {
+export const createVenueController = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const response = await getUserCredentials(email);
-    // bcrypt.hash("123", saltRounds, function (err, hash) {
-    //   console.log(hash);
-    // });
-    const userData = response[0];
-    if (userData) {
-      if (bcrypt.compareSync(password, userData.password)) {
-        const token = jwt.sign(
-          {
-            data: userData,
-          },
-          "cricket",
-          { expiresIn: 60 * 60 }
-        );
-        return res.json({
-          authorizationStatus: true,
-          token,
-          message: "Authorization successful",
-          userFoundStatus: true,
-        });
-      } else {
-        return res.json({
-          authorizationStatus: false,
-          token: false,
-          message: "User found but Authorization failed",
-          userFoundStatus: true,
-        });
-      }
-    } else {
-      return res.json({
-        authorizationStatus: false,
-        token: false,
-        message: "User not found & Authorization failed ",
-        userFoundStatus: false,
-      });
-    }
+    let formDetails = req.body;
+
+    formDetails = {
+      ...formDetails,
+      // updatedTime: updatedTime, // Use the formatted date
+    };
+
+    const [response] = await createVenueDetails(formDetails);
+    console.log("response in controller", response);
+
+    res.status(201).json({ message: "Court created successfully", response });
   } catch (error) {
-    throw error;
+    console.error("Error occurred in create court controller: ", error);
+    res.status(500).json({ error: "Error occurred while creating court" });
+  }
+};
+export const getVenuesFromIdController = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const response = await getVenuesFromId(userId);
+
+    if (!response.length) {
+      return res
+        .status(404)
+        .json({ message: "No venues found for this user." });
+    }
+
+    const venueNames = response.map((venue) => venue.venue_name);
+    const result = { Venues: venueNames };
+    // {
+    //   "Venues": [
+    //     "Venue 1",
+    //     "Venue 2"
+    //   ]
+    // }This is the result format
+    res.json(result);
+  } catch (error) {
+    console.error("Error occurred in getVenueDetails controller: ", error); // Log the error
+    res
+      .status(500)
+      .json({ error: "Error occurred while fetching venue details" }); // Send error response
   }
 };

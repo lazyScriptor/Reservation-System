@@ -18,8 +18,7 @@ export default {
         brandBlueLight: "#0DB3D9",
         brandYellowDark: "#A65D05",
         brandRed: "#BF3326",
-        brandGray: "#F2F2F2",
-        
+        brandGray: "#F2F2F2",    
         brandPurple: "#9941BF", //30%
         brandDarkPurple: "#3C308C",
         brandYellow: "#F2B705", //10%
