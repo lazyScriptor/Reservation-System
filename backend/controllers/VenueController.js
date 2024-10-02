@@ -23,7 +23,6 @@ export const createVenueController = async (req, res) => {
 export const getVenuesFromIdController = async (req, res) => {
   try {
     const { tenantId } = req.params;
-    console.log("controleer", tenantId);
     const response = await getVenuesFromId(tenantId);
 
     if (!response.length) {

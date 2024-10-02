@@ -40,7 +40,7 @@ export const createVenueDetails = async (formData) => {
 };
 
 export const getVenuesFromId = async (tenantId) => {
-  console.log(tenantId)
+
   try {
     const [response] = await pool.query(
       `
@@ -48,7 +48,7 @@ export const getVenuesFromId = async (tenantId) => {
     `,
       [tenantId]
     );
-    console.log(response)
+  
     return response;
   } catch (error) {
     throw ("Error occured in the getVenueFromId model", error);
