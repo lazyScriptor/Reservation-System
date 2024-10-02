@@ -29,14 +29,21 @@ export const getVenuesFromIdController = async (req, res) => {
         .json({ message: "No venues found for this user." });
     }
 
-    const venueNames = response.map((venue) => venue.venue_name);
-    const result = { Venues: venueNames };
+    // Map to create an array of objects with venue_id and venue_name
+    const venuesWithId = response.map((venue) => ({
+      venue_id: venue.venue_id, // Assuming you have a column 'venue_id' in your response
+      venue_name: venue.venue_name,
+    }));
+
+    const result = { Venues: venuesWithId };
+    // Result format:
     // {
     //   "Venues": [
-    //     "Venue 1",
-    //     "Venue 2"
+    //     { "venue_id": 1, "venue_name": "Venue 1" },
+    //     { "venue_id": 2, "venue_name": "Venue 2" }
     //   ]
-    // }This is the result format
+    // }
+
     res.json(result);
   } catch (error) {
     console.error("Error occurred in getVenueDetails controller: ", error); // Log the error

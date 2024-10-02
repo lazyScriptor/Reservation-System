@@ -40,6 +40,7 @@ export const createCourtDetails = async (formData) => {
         updatedTime,
       ]
     );
+    return response;
   } catch (error) {
     throw ("Error occured in courts model create courts details", error);
   }

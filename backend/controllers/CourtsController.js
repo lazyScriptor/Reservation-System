@@ -11,24 +11,28 @@ const formatDateAndTime = (date) => {
 
 export const createCourtController = async (req, res) => {
   try {
-    let formDetails = req.body; // Declare using 'let' to allow reassignment
-    const createdTime = formatDateAndTime(new Date()); // Get the current date and time
-    const updatedTime = formatDateAndTime(new Date()); // Get the current date and time
+    let formDetails = req.body;
+    const createdTime = formatDateAndTime(new Date());
+    const updatedTime = formatDateAndTime(new Date());
 
-    // Format the date to MySQL compatible format
-
+    // Add the formatted dates to the form details
     formDetails = {
       ...formDetails,
-      createdTime: createdTime, // Use the formatted date
-      updatedTime: updatedTime, // Use the formatted date
+      createdTime,
+      updatedTime,
     };
 
-    const [response] = await createCourtDetails(formDetails);
-    console.log("response in controller", response);
+    // Insert court details into the database
+    const response = await createCourtDetails(formDetails);
 
-    res.status(201).json({ message: "Court created successfully", response });
+    // Check if rows were affected by the insertion
+    if (response.affectedRows >= 1) {
+      res.status(201).json({ message: "Court created successfully", response });
+    } else {
+      res.status(400).json({ message: "Court creation failed", response });
+    }
   } catch (error) {
     console.error("Error occurred in create court controller: ", error);
-    res.status(500).json({ error: "Error occurred while creating court" });
+    res.status(500).json({ error: "An internal server error occurred while creating the court" });
   }
 };

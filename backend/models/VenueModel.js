@@ -44,7 +44,7 @@ export const getVenuesFromId = async (userId) => {
   try {
     const [response] = await pool.query(
       `
-    SELECT venue_name FROM venue WHERE user_id = ?
+    SELECT venue_id,venue_name FROM venue WHERE user_id = ?
     `,
       [userId]
     );

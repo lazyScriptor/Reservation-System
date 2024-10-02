@@ -6,11 +6,12 @@ import { CourtTypeContext } from "../../../contexts/Contexts";
 import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized";
 import axios from "axios";
 import StepperHorizontal from "../../../components/StepperHorizontal";
+
 // Yup validation schema
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
   courtType: yup.string().required("Court type is required"),
-  venueName: yup.string().required("Court type is required"),
+  venueName: yup.string().required("Venue name is required"),
   startTime: yup.string().required("Start time is required"),
   endTime: yup.string().required("End time is required"),
   noOfAreas: yup
@@ -21,17 +22,18 @@ const courtSchema = yup.object().shape({
   costPerSlot: yup
     .number()
     .typeError("Must be a number")
-    .required("Number of areas is required")
-    .min(1, "Must have at least 1 area"),
+    .required("Cost per slot is required")
+    .min(1, "Cost must be at least 1"),
   intervalSize: yup
     .number()
     .typeError("Must be a number")
-    .required("Number of areas is required")
-    .min(1, "Must have at least 1 area"),
+    .required("Interval size is required")
+    .min(1, "Must have at least 1 interval size"),
 });
 
 export default function CourtForm() {
   const [venues, setVenues] = useState([]);
+  
   useEffect(() => {
     const fetchVenueNames = async () => {
       try {
@@ -48,7 +50,6 @@ export default function CourtForm() {
 
     fetchVenueNames();
   }, []);
-
 
   const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
 
@@ -84,7 +85,7 @@ export default function CourtForm() {
       {/* <StepperHorizontal number={2} color={"brandBlue"} /> */}
       <div className="container shadow-lg rounded-xl">
         <div className="p-4 ">
-          <h2 className="text-xl">Create Court type</h2>
+          <h2 className="text-xl">Create Court Type</h2>
         </div>
         <div>
           <form
@@ -93,7 +94,7 @@ export default function CourtForm() {
           >
             {/* Court Name */}
             <div>
-              <label>Court name</label>
+              <label>Court Name</label>
               <InputFieldCustomized
                 type="text"
                 name="courtName"
@@ -106,12 +107,12 @@ export default function CourtForm() {
 
             {/* Court Type */}
             <div className="flex flex-col">
-              <label>Court type</label>
+              <label>Court Type</label>
               <select
                 {...register("courtType")}
-                className="border border-gray-300 p-1 pl-2 self-center rounded-md  w-full lg:max-w-xl"
+                className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
               >
-                <option value="">Select </option>{" "}
+                <option value="">Select</option>
                 {/* Default unselected option */}
                 <option value={1}>Type 1</option>
                 <option value={2}>Type 2</option>
@@ -121,26 +122,28 @@ export default function CourtForm() {
                 <p className="text-red-500">{errors.courtType.message}</p>
               )}
             </div>
-            {/* Venue type */}
+
+            {/* Venue Name */}
             <div className="flex flex-col">
-              <label>Venue name</label>
+              <label>Venue Name</label>
               <select
                 {...register("venueName")}
-                className="border border-gray-300 p-1 pl-2 self-center rounded-md  w-full lg:max-w-xl"
+                className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
               >
-                {venues && venues.map((venue, index) => (
-                
-                    <option key={index} value={1}>{venue}</option>
-                 
+                <option value="">Select Venue</option>
+                {venues.map((venue) => (
+                  <option key={venue.venue_id} value={venue.venue_id}>
+                    {venue.venue_name}
+                  </option>
                 ))}
               </select>
-              {errors.courtType && (
-                <p className="text-red-500">{errors.courtType.message}</p>
+              {errors.venueName && (
+                <p className="text-red-500">{errors.venueName.message}</p>
               )}
             </div>
 
             {/* Time Selectors */}
-            <div className="">
+            <div>
               <label>Start Time</label>
               <InputFieldCustomized
                 type="time"
@@ -164,7 +167,7 @@ export default function CourtForm() {
 
             {/* Number of Areas */}
             <div>
-              <label>No of areas</label>
+              <label>No of Areas</label>
               <InputFieldCustomized
                 type="number"
                 name="noOfAreas"
@@ -175,19 +178,20 @@ export default function CourtForm() {
               )}
             </div>
 
-            {/* Cost per slot */}
+            {/* Cost per Slot */}
             <div>
-              <label>Cost per slot</label>
+              <label>Cost per Slot</label>
               <InputFieldCustomized
                 type="number"
                 name="costPerSlot"
                 register={register}
               />
-              {errors.noOfAreas && (
-                <p className="text-red-500">{errors.noOfAreas.message}</p>
+              {errors.costPerSlot && (
+                <p className="text-red-500">{errors.costPerSlot.message}</p>
               )}
             </div>
-            {/* Interval size */}
+
+            {/* Interval Size */}
             <div>
               <label>Interval Size</label>
               <InputFieldCustomized
@@ -195,8 +199,8 @@ export default function CourtForm() {
                 name="intervalSize"
                 register={register}
               />
-              {errors.noOfAreas && (
-                <p className="text-red-500">{errors.noOfAreas.message}</p>
+              {errors.intervalSize && (
+                <p className="text-red-500">{errors.intervalSize.message}</p>
               )}
             </div>
 
