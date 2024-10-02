@@ -58,7 +58,9 @@ export const getCourtTypeByTenantIdAndVenueController = async (req, res) => {
     if (response.length === 0) {
       return res
         .status(404)
-        .json({ message: "No court types found for the given tenant and venue" });
+        .json({
+          message: "No court types found for the given tenant and venue",
+        });
     }
 
     // Optionally, you can format the response or add additional logic here
@@ -91,6 +93,10 @@ export const createCourtTypeDetailsController = async (req, res) => {
     });
   } catch (error) {
     console.error("Error occurred while creating court type details:", error);
-    res.status(500).json({ message: "Failed to create court type details. Please try again later." });
+    res
+      .status(500)
+      .json({
+        message: "Failed to create court type details. Please try again later.",
+      });
   }
 };
