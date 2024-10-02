@@ -39,11 +39,15 @@ export default function CreateVenueForm() {
       ...prev,
       venueData: data,
     }));
-   
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/venue/create-venue`,
-        data
+        {
+          ...data,
+          tenantId: localStorage.getItem("tenantId"),
+          
+        }
       );
     } catch (error) {
       console.error("Error occurred in form submit handler", error);

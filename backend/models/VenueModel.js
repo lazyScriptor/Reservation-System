@@ -1,7 +1,6 @@
 import pool from "../databaseConnection.js";
 
 export const createVenueDetails = async (formData) => {
-  console.log("first");
   const {
     venueName,
     venueAddress,
@@ -10,23 +9,23 @@ export const createVenueDetails = async (formData) => {
     openingHours,
     closingHours,
     status,
+    tenantId,
   } = formData;
 
   try {
-    console.log(formData);
     const [response] = await pool.query(
       `
-      INSERT INTO venue(venue_name,user_id, venue_address, venue_description, contact_info, opening_hours, closing_hours, status, updated_at)
-      VALUES (?, ?, ?, ?, ?, ?,?, ?, NOW())
+      INSERT INTO venue(tenant_id, venue_name, venue_address, venue_description, contact_info, opening_hours, closing_hours, status, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
       `,
       [
+        tenantId,
         venueName,
-        1,
         venueAddress,
         venueDescription,
         contactInfo,
         openingHours,
-        closingHours, // Include this value here
+        closingHours,
         status,
       ]
     );
@@ -40,14 +39,16 @@ export const createVenueDetails = async (formData) => {
   }
 };
 
-export const getVenuesFromId = async (userId) => {
+export const getVenuesFromId = async (tenantId) => {
+  console.log(tenantId)
   try {
     const [response] = await pool.query(
       `
-    SELECT venue_id,venue_name FROM venue WHERE user_id = ?
+    SELECT venue_id,venue_name FROM venue WHERE tenant_id = ?
     `,
-      [userId]
+      [tenantId]
     );
+    console.log(response)
     return response;
   } catch (error) {
     throw ("Error occured in the getVenueFromId model", error);

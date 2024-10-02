@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import CreateVenueForm from "./forms/CreateVenueForm";
-import CourtCreateFrom from "./forms/CourtCreateFrom";
+
 import CategoryTypeButton from "../../components/CategoryTypeButton";
+import CreateCourtTypeForm from "./forms/CreateCourtTypeForm";
+import CreateCourtForm from "./forms/CreateCourtForm";
 
 function ReservationBase() {
   const [disableStatus, setDisableStatus] = useState(false);
   const [count, setCount] = useState(1);
-  
 
   // Function to update the count based on button click
   const handleClick = (number) => {
@@ -28,10 +29,16 @@ function ReservationBase() {
                 disableStatus={disableStatus}
               />
               <CategoryTypeButton
-                name="Create Court"
+                name="Create Court Type"
                 color="brandBlue"
                 hoverTextColor="brandDarkPurple"
                 handleClick={() => handleClick(2)} // Call handleClick for court form
+              />
+              <CategoryTypeButton
+                name="Create Court"
+                color="brandBlue"
+                hoverTextColor="brandDarkPurple"
+                handleClick={() => handleClick(3)} // Call handleClick for court form
               />
             </div>
           </div>
@@ -40,7 +47,9 @@ function ReservationBase() {
             {count === 1 ? (
               <CreateVenueForm />
             ) : count === 2 ? (
-              <CourtCreateFrom />
+              <CreateCourtTypeForm />
+            ) : count === 3 ? (
+              <CreateCourtForm />
             ) : (
               <p>Select an option from the left to proceed</p>
             )}

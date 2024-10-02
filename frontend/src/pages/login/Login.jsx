@@ -77,6 +77,7 @@ export default function Login() {
         {
           localStorage.setItem("token", authDetails.token);
           localStorage.setItem("userId", decodedToken.data.user_id);
+          localStorage.setItem("tenantId", decodedToken.data.tenant_id);
           localStorage.setItem("userType", decodedToken.data.user_type);
           localStorage.setItem("userName", [
             `${decodedToken.data.first_name} 

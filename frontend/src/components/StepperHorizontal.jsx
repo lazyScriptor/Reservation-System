@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateVenueForm from "../pages/reservation/forms/CreateVenueForm";
-import CourtCreateForm from "../pages/reservation/forms/CourtCreateFrom";
+import CourtCreateForm from "../pages/reservation/forms/CreateCourtTypeForm";
 
 const buttonArray = [
   {

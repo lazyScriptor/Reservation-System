@@ -9,10 +9,12 @@ export const createVenueController = async (req, res) => {
       // updatedTime: updatedTime, // Use the formatted date
     };
 
-    const [response] = await createVenueDetails(formDetails);
-    console.log("response in controller", response);
-
-    res.status(201).json({ message: "Court created successfully", response });
+    const response = await createVenueDetails(formDetails);
+    if (response.affectedRows == 0) {
+      res.status(500).json({ error: "Error occurred while creating court" });
+    } else {
+      res.status(201).json({ message: "Court created successfully", response });
+    }
   } catch (error) {
     console.error("Error occurred in create court controller: ", error);
     res.status(500).json({ error: "Error occurred while creating court" });
@@ -20,8 +22,9 @@ export const createVenueController = async (req, res) => {
 };
 export const getVenuesFromIdController = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const response = await getVenuesFromId(userId);
+    const { tenantId } = req.params;
+    console.log("controleer", tenantId);
+    const response = await getVenuesFromId(tenantId);
 
     if (!response.length) {
       return res

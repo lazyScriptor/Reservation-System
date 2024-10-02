@@ -5,9 +5,7 @@ import * as yup from "yup";
 import { CourtTypeContext } from "../../../contexts/Contexts";
 import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized";
 import axios from "axios";
-import StepperHorizontal from "../../../components/StepperHorizontal";
 
-// Yup validation schema
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
   courtType: yup.string().required("Court type is required"),
@@ -31,15 +29,15 @@ const courtSchema = yup.object().shape({
     .min(1, "Must have at least 1 interval size"),
 });
 
-export default function CourtForm() {
+export default function CreateCourtForm() {
   const [venues, setVenues] = useState([]);
-  
+
   useEffect(() => {
     const fetchVenueNames = async () => {
       try {
-        const id = localStorage.getItem("userId");
+        const tenantId = localStorage.getItem("tenantId");
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/venue/name/${id}`
+          `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
         );
         console.log(response.data.Venues);
         setVenues(response.data.Venues);
@@ -106,14 +104,14 @@ export default function CourtForm() {
             </div>
 
             {/* Court Type */}
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <label>Court Type</label>
               <select
                 {...register("courtType")}
                 className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
               >
                 <option value="">Select</option>
-                {/* Default unselected option */}
+               
                 <option value={1}>Type 1</option>
                 <option value={2}>Type 2</option>
                 <option value={3}>Type 3</option>
@@ -121,7 +119,7 @@ export default function CourtForm() {
               {errors.courtType && (
                 <p className="text-red-500">{errors.courtType.message}</p>
               )}
-            </div>
+            </div> */}
 
             {/* Venue Name */}
             <div className="flex flex-col">
@@ -139,6 +137,36 @@ export default function CourtForm() {
               </select>
               {errors.venueName && (
                 <p className="text-red-500">{errors.venueName.message}</p>
+              )}
+            </div>
+
+            {/* Cost per Slot */}
+            <div>
+              <label>Cost per Slot</label>
+              <InputFieldCustomized
+                type="number"
+                name="costPerSlot"
+                register={register}
+              />
+              {errors.costPerSlot && (
+                <p className="text-red-500">{errors.costPerSlot.message}</p>
+              )}
+            </div>
+
+            {/* Status */}
+            <div className="flex flex-col">
+              <label>Court Status</label>
+              <select
+                {...register("courtType")}
+                className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              >
+                <option value="">Select</option>
+                <option value={"available"}>available</option>
+                <option value={"booked"}>booked</option>
+                <option value={"undermaintenance"}>under maintenance</option>
+              </select>
+              {errors.courtType && (
+                <p className="text-red-500">{errors.courtType.message}</p>
               )}
             </div>
 
@@ -175,19 +203,6 @@ export default function CourtForm() {
               />
               {errors.noOfAreas && (
                 <p className="text-red-500">{errors.noOfAreas.message}</p>
-              )}
-            </div>
-
-            {/* Cost per Slot */}
-            <div>
-              <label>Cost per Slot</label>
-              <InputFieldCustomized
-                type="number"
-                name="costPerSlot"
-                register={register}
-              />
-              {errors.costPerSlot && (
-                <p className="text-red-500">{errors.costPerSlot.message}</p>
               )}
             </div>
 

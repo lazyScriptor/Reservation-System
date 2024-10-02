@@ -9,5 +9,5 @@ router.get("/", (req, res) => {
   res.send("In the venue route base");
 });
 router.post("/create-venue", createVenueController);
-router.get(`/name/:id`, getVenuesFromIdController);
+router.get(`/name/:tenantId`, getVenuesFromIdController);
 export default router;
