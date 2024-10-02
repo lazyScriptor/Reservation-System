@@ -14,21 +14,11 @@ const courtSchema = yup.object().shape({
   venueName: yup.string().required("Venue name is required"),
   startTime: yup.string().required("Start time is required"),
   endTime: yup.string().required("End time is required"),
-  noOfAreas: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Number of areas is required")
-    .min(1, "Must have at least 1 area"),
   costPerSlot: yup
     .number()
     .typeError("Must be a number")
     .required("Cost per slot is required")
     .min(1, "Cost must be at least 1"),
-  intervalSize: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Interval size is required")
-    .min(1, "Must have at least 1 interval size"),
 });
 
 export default function CreateCourtForm() {
@@ -36,6 +26,7 @@ export default function CreateCourtForm() {
   const [courtTypes, setCourtTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedVenueId, setSelectedVenueId] = useState(""); // State to track selected venue
 
   useEffect(() => {
     const fetchVenueNames = async () => {
@@ -54,22 +45,31 @@ export default function CreateCourtForm() {
     fetchVenueNames();
   }, []);
 
+  // Fetch court types based on selected venue
   useEffect(() => {
     const fetchCourtTypes = async () => {
-      try {
-        const tenantId = localStorage.getItem("tenantId");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/court-types/court-type-by-id/${tenantId}`
-        );
-        setCourtTypes(response.data.response);
-      } catch (error) {
-        console.error("Error fetching court types:", error);
-        setError("Failed to fetch court types");
+      if (selectedVenueId) {
+        try {
+          const tenantId = localStorage.getItem("tenantId");
+          const response = await axios.get(
+            `${
+              import.meta.env.VITE_API_URL
+            }/court-types/court-type-by-id-and-venue/${tenantId}/${selectedVenueId}`
+          );
+          setCourtTypes(response.data.response);
+        } catch (error) {
+          console.error("Error fetching court types:", error);
+          setError(
+            "There are no court types under this venue,please create it first"
+          );
+        }
+      } else {
+        setCourtTypes([]); // Reset court types if no venue is selected
       }
     };
 
     fetchCourtTypes();
-  }, []);
+  }, [selectedVenueId]); // Dependency on selectedVenueId
 
   const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
 
@@ -83,6 +83,7 @@ export default function CreateCourtForm() {
   });
 
   const onSubmit = async (data) => {
+    console.log(data);
     setCourtCreateForm((prev) => ({
       ...prev,
       courtData: data,
@@ -105,33 +106,26 @@ export default function CreateCourtForm() {
 
   return (
     <div>
-      {error && <p className="text-red-500">{error}</p>}
       <div className="container shadow-lg rounded-xl">
         <div className="p-4">
-          <h2 className="text-xl">Create Court Type</h2>
+          <h2 className="text-xl">Create Court</h2>
         </div>
         <form
           className="flex flex-col p-2 gap-2"
           onSubmit={handleSubmit(onSubmit)}
         >
-          {/* Court Name */}
-          <div>
-            <label>Court Name</label>
-            <InputFieldCustomized
-              type="text"
-              name="courtName"
-              register={register}
-            />
-            {errors.courtName && (
-              <p className="text-red-500 h-6">{errors.courtName.message}</p>
-            )}
-          </div>
           {/* Venue Name */}
           <div className="flex flex-col">
             <label>Venue Name</label>
             <select
               {...register("venueName")}
               className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              onChange={(e) => {
+                setError("");
+                setCourtTypes([]);
+                setSelectedVenueId(e.target.value); // Update selected venue ID
+                register("venueName").onChange(e); // Call original onChange
+              }}
             >
               <option value="">Select Venue</option>
               {venues.map((venue) => (
@@ -144,7 +138,7 @@ export default function CreateCourtForm() {
               <p className="text-red-500">{errors.venueName.message}</p>
             )}
           </div>
-
+          {error && <p className="text-red-500">{error}</p>}
           {/* Court Type */}
           <div className="flex flex-col">
             <label>Court Type</label>
@@ -156,7 +150,7 @@ export default function CreateCourtForm() {
               {courtTypes.map((courtType) => (
                 <option
                   key={courtType.court_type_id}
-                  value={courtType.type_name}
+                  value={courtType.court_type_id}
                 >
                   {courtType.type_name}
                 </option>
@@ -164,6 +158,19 @@ export default function CreateCourtForm() {
             </select>
             {errors.courtType && (
               <p className="text-red-500">{errors.courtType.message}</p>
+            )}
+          </div>
+
+          {/* Court Name */}
+          <div>
+            <label>Court Name</label>
+            <InputFieldCustomized
+              type="text"
+              name="courtName"
+              register={register}
+            />
+            {errors.courtName && (
+              <p className="text-red-500 h-6">{errors.courtName.message}</p>
             )}
           </div>
 

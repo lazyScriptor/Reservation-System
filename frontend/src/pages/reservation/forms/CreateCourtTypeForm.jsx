@@ -3,37 +3,22 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { CourtTypeContext } from "../../../contexts/Contexts";
-import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized";
+import InputFieldCustomized, { SelectFieldCustomized } from "../../../ReUsableComponents/InputFieldCustomized";
+
 import axios from "axios";
-import StepperHorizontal from "../../../components/StepperHorizontal";
 
 // Yup validation schema
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
   courtType: yup.string().required("Court type is required"),
   venueName: yup.string().required("Venue name is required"),
-  startTime: yup.string().required("Start time is required"),
-  endTime: yup.string().required("End time is required"),
-  noOfAreas: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Number of areas is required")
-    .min(1, "Must have at least 1 area"),
-  costPerSlot: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Cost per slot is required")
-    .min(1, "Cost must be at least 1"),
-  intervalSize: yup
-    .number()
-    .typeError("Must be a number")
-    .required("Interval size is required")
-    .min(1, "Must have at least 1 interval size"),
+  courtDescription: yup.string().max(250),
 });
 
 export default function CreateCourtTypeForm() {
   const [venues, setVenues] = useState([]);
-  
+  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
+
   useEffect(() => {
     const fetchVenueNames = async () => {
       try {
@@ -41,7 +26,6 @@ export default function CreateCourtTypeForm() {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
         );
-        console.log(response.data.Venues);
         setVenues(response.data.Venues);
       } catch (error) {
         console.error("Error fetching venue names:", error);
@@ -50,8 +34,6 @@ export default function CreateCourtTypeForm() {
 
     fetchVenueNames();
   }, []);
-
-  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
 
   const {
     register,
@@ -70,19 +52,23 @@ export default function CreateCourtTypeForm() {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/court/create-court`,
+        `${import.meta.env.VITE_API_URL}/court-types/create-court-type`,
         data
       );
       console.log("Court data submitted successfully");
     } catch (error) {
       console.error("Error occurred in form submit handler", error);
-      throw new Error("Error occurred in form submit handler", error); // Optional: rethrow or handle it
     }
   };
 
+  // Options for court types
+  const courtTypeOptions = [
+    { value: 1, label: "Small and compact" },
+    { value: 2, label: "Bigger slots" },
+  ];
+
   return (
     <div>
-      {/* <StepperHorizontal number={2} color={"brandBlue"} /> */}
       <div className="container shadow-lg rounded-xl">
         <div className="p-4 ">
           <h2 className="text-xl">Create Court Type</h2>
@@ -92,9 +78,9 @@ export default function CreateCourtTypeForm() {
             className="flex flex-col p-2 gap-2"
             onSubmit={handleSubmit(onSubmit)}
           >
-            {/* Court Name */}
+            {/* Court type name */}
             <div>
-              <label>Court Name</label>
+              <label>Court type name </label>
               <InputFieldCustomized
                 type="text"
                 name="courtName"
@@ -106,101 +92,44 @@ export default function CreateCourtTypeForm() {
             </div>
 
             {/* Court Type */}
-            <div className="flex flex-col">
-              <label>Court Type</label>
-              <select
-                {...register("courtType")}
-                className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
-              >
-                <option value="">Select</option>
-                {/* Default unselected option */}
-                <option value={1}>Type 1</option>
-                <option value={2}>Type 2</option>
-                <option value={3}>Type 3</option>
-              </select>
-              {errors.courtType && (
-                <p className="text-red-500">{errors.courtType.message}</p>
-              )}
-            </div>
+            <SelectFieldCustomized
+              name="courtType"
+              register={register}
+              options={courtTypeOptions} // Pass the options for court types
+              error={errors.courtType} // Pass the error state
+              helperText={errors.courtType?.message} // Pass the helper text
+              label="Schedule Type" // Pass the label
+              setErrorMessage={() => {}} // Placeholder function for setting error messages
+              setErrorToogle={() => {}} // Placeholder function for toggling error state
+            />
 
             {/* Venue Name */}
-            <div className="flex flex-col">
-              <label>Venue Name</label>
-              <select
-                {...register("venueName")}
-                className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
-              >
-                <option value="">Select Venue</option>
-                {venues.map((venue) => (
-                  <option key={venue.venue_id} value={venue.venue_id}>
-                    {venue.venue_name}
-                  </option>
-                ))}
-              </select>
-              {errors.venueName && (
-                <p className="text-red-500">{errors.venueName.message}</p>
-              )}
-            </div>
+            <SelectFieldCustomized
+              name="venueName"
+              register={register}
+              options={venues.map(venue => ({
+                value: venue.venue_id,
+                label: venue.venue_name,
+              }))} // Map venues to options
+              error={errors.venueName} // Pass the error state
+              helperText={errors.venueName?.message} // Pass the helper text
+              label="Venue Name" // Pass the label
+              setErrorMessage={() => {}} // Placeholder function for setting error messages
+              setErrorToogle={() => {}} // Placeholder function for toggling error state
+            />
 
-            {/* Time Selectors */}
+            {/* Court description */}
             <div>
-              <label>Start Time</label>
+              <label>Court description </label>
               <InputFieldCustomized
-                type="time"
-                name="startTime"
+                type="text"
+                name="courtDescription"
                 register={register}
               />
-              {errors.startTime && (
-                <p className="text-red-500">{errors.startTime.message}</p>
-              )}
-
-              <label>End Time</label>
-              <InputFieldCustomized
-                type="time"
-                name="endTime"
-                register={register}
-              />
-              {errors.endTime && (
-                <p className="text-red-500">{errors.endTime.message}</p>
-              )}
-            </div>
-
-            {/* Number of Areas */}
-            <div>
-              <label>No of Areas</label>
-              <InputFieldCustomized
-                type="number"
-                name="noOfAreas"
-                register={register}
-              />
-              {errors.noOfAreas && (
-                <p className="text-red-500">{errors.noOfAreas.message}</p>
-              )}
-            </div>
-
-            {/* Cost per Slot */}
-            <div>
-              <label>Cost per Slot</label>
-              <InputFieldCustomized
-                type="number"
-                name="costPerSlot"
-                register={register}
-              />
-              {errors.costPerSlot && (
-                <p className="text-red-500">{errors.costPerSlot.message}</p>
-              )}
-            </div>
-
-            {/* Interval Size */}
-            <div>
-              <label>Interval Size</label>
-              <InputFieldCustomized
-                type="number"
-                name="intervalSize"
-                register={register}
-              />
-              {errors.intervalSize && (
-                <p className="text-red-500">{errors.intervalSize.message}</p>
+              {errors.courtDescription && (
+                <p className="text-red-500 h-6">
+                  {errors.courtDescription.message}
+                </p>
               )}
             </div>
 
