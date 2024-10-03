@@ -12,7 +12,21 @@ export function CourtTypeContextProvider({ children }) {
   const [courts, setCourts] = useState([]);
   const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
+  const [timeDifference, setTimeDifference] = useState(); // State for time difference
 
+  const getTimeDifference = (openingTime, closingTime) => {
+    // Convert the opening and closing hours into Date objects
+    const opening = new Date(`1970-01-01T${openingTime}Z`);
+    const closing = new Date(`1970-01-01T${closingTime}Z`);
+
+    // Calculate the difference in milliseconds
+    const differenceInMs = closing - opening;
+
+    // Convert milliseconds into hours
+    const differenceInHours = differenceInMs / (1000 * 60 * 60); // 1000 ms * 60 sec * 60 min = 1 hour
+
+    return differenceInHours.toFixed(2); // Return the difference rounded to 2 decimal places
+  };
   // Fetch courts by venue and court type and calculate the minimum and maximum time
   const handleGetCourts = async (venueId, courtTypeId) => {
     if (venueId && courtTypeId) {
@@ -47,7 +61,8 @@ export function CourtTypeContextProvider({ children }) {
               maxClosingTime: fetchedCourts[0].closing_hours, // Initialize with the first court's closing time
             }
           );
-
+          const difference = getTimeDifference(minOpeningTime, maxClosingTime);
+          setTimeDifference(difference);
           // Update the state with the calculated min/max times
           setOpeningHours(minOpeningTime);
           setClosingHours(maxClosingTime);
@@ -142,6 +157,7 @@ export function CourtTypeContextProvider({ children }) {
         handleGetCourts,
         openingHours, // Pass down the calculated opening hours
         closingHours, // Pass down the calculated closing hours
+        timeDifference
       }}
     >
       {children}

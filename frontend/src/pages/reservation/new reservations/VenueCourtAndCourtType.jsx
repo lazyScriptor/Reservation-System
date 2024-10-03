@@ -86,13 +86,8 @@ function VenueCourtAndCourtType() {
         </div>
       </div>
 
-      {/* Display opening and closing hours */}
-      {openingHours && closingHours && (
-        <div>
-          <p>Minimum Opening Time: {openingHours}</p>
-          <p>Maximum Closing Time: {closingHours}</p>
-        </div>
-      )}
+    
+     
     </div>
   );
 }
