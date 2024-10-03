@@ -8,25 +8,86 @@ export function CourtTypeContextProvider({ children }) {
   const [venues, setVenues] = useState([]);
   const [courtTypes, setCourtTypes] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState(""); // State to track selected venue
+  const [tenantId, setTenantId] = useState(localStorage.getItem("tenantId")); // State to store tenantId
+  const [courts, setCourts] = useState([]);
+  const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
+  const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
 
+  // Fetch courts by venue and court type and calculate the minimum and maximum time
+  const handleGetCourts = async (venueId, courtTypeId) => {
+    if (venueId && courtTypeId) {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/court/courts-by-venue-and-courttype/${venueId}/${courtTypeId}`
+        );
+
+        if (response.data.response) {
+          const fetchedCourts = response.data.response;
+          setCourts(fetchedCourts);
+
+          // Calculate the minimum opening and maximum closing times
+          const { minOpeningTime, maxClosingTime } = fetchedCourts.reduce(
+            (acc, court) => {
+              const opening = court.opening_hours;
+              const closing = court.closing_hours;
+
+              if (opening < acc.minOpeningTime) {
+                acc.minOpeningTime = opening;
+              }
+              if (closing > acc.maxClosingTime) {
+                acc.maxClosingTime = closing;
+              }
+
+              return acc;
+            },
+            {
+              minOpeningTime: fetchedCourts[0].opening_hours, // Initialize with the first court's opening time
+              maxClosingTime: fetchedCourts[0].closing_hours, // Initialize with the first court's closing time
+            }
+          );
+
+          // Update the state with the calculated min/max times
+          setOpeningHours(minOpeningTime);
+          setClosingHours(maxClosingTime);
+        } else {
+          setCourts([]); // Reset if no courts found
+        }
+      } catch (error) {
+        setCourts([]);
+        console.error("Error fetching courts:", error);
+      }
+    } else {
+      setCourts([]); // Reset courts if no venue or court type is selected
+    }
+  };
+
+  // Listening to the tenant id
+  useEffect(() => {
+    const storedTenantId = localStorage.getItem("tenantId");
+    if (storedTenantId !== tenantId) {
+      setTenantId(storedTenantId);
+    }
+  }, [tenantId]);
+
+  // Fetch court types by venueID and tenantId
   useEffect(() => {
     const fetchCourtTypes = async () => {
-      if (selectedVenueId) {
+      if (selectedVenueId && tenantId) {
         try {
-          const tenantId = localStorage.getItem("tenantId");
           const response = await axios.get(
             `${
               import.meta.env.VITE_API_URL
             }/court-types/court-type-by-id-and-venue/${tenantId}/${selectedVenueId}`
           );
-          if (courtTypes) {
+          if (response.data.response) {
             setCourtTypes(response.data.response);
           } else {
-            setCourtTypes([]);
+            setCourtTypes([]); // Reset if no court types found
           }
         } catch (error) {
           setCourtTypes([]);
-
           console.error("Error fetching court types:", error);
         }
       } else {
@@ -35,27 +96,41 @@ export function CourtTypeContextProvider({ children }) {
     };
 
     fetchCourtTypes();
-  }, [selectedVenueId]); // Dependency on selectedVenueId
+  }, [selectedVenueId, tenantId]);
+
+  // Fetch venue names by tenant id
   useEffect(() => {
     const fetchVenueNames = async () => {
-      try {
-        const tenantId = localStorage.getItem("tenantId");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
-        );
-        console.log("venue typeds", response.data.Venues);
-
-        setVenues(response.data.Venues);
-      } catch (error) {
-        console.error("Error fetching venue names:", error);
+      if (tenantId) {
+        try {
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
+          );
+          console.log("venue types", response.data.Venues);
+          setVenues(response.data.Venues);
+        } catch (error) {
+          console.error("Error fetching venue names:", error);
+        }
       }
     };
 
     fetchVenueNames();
-  }, [courtTypes]);
+  }, [tenantId]);
+
+  // Empty the courts and court types arrays when venues or court types change
+  useEffect(() => {
+    setCourts([]);
+  }, [venues, courtTypes]);
+
+  useEffect(() => {
+    setCourtTypes([]);
+  }, [venues]);
+
   return (
     <CourtTypeContext.Provider
       value={{
+        courts,
+        setCourts,
         courtCreateForm,
         setCourtCreateForm,
         courtTypes,
@@ -64,6 +139,9 @@ export function CourtTypeContextProvider({ children }) {
         setSelectedVenueId,
         venues,
         setVenues,
+        handleGetCourts,
+        openingHours, // Pass down the calculated opening hours
+        closingHours, // Pass down the calculated closing hours
       }}
     >
       {children}
@@ -71,4 +149,4 @@ export function CourtTypeContextProvider({ children }) {
   );
 }
 
-export default CourtTypeContextProvider; // This exports it as default
+export default CourtTypeContextProvider;

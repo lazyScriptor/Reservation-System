@@ -4,15 +4,19 @@ import ReservationCategoryBar from "./ReservationCategoryBar";
 import ShiftDateCalendar from "./ShiftDateCalendar";
 import ReservationGrid from "./ReservationGrid";
 import VenueCourtAndCourtType from "./new reservations/VenueCourtAndCourtType";
+import CourtTypeContextProvider from "../../contexts/providers/CourtTypeContextProvider";
 
 function Reservation() {
   return (
-    <div className="bg-gray-200 text-gray-700">
-      <VenueCourtAndCourtType />
-      <ShiftDateCalendar />
-      <ReservationGrid />
-      {/* <ReservationBase/> */}
-    </div>
+    <CourtTypeContextProvider>
+      <div className="bg-gray-200 text-gray-700">
+        <VenueCourtAndCourtType />
+        <ShiftDateCalendar />
+        <ReservationGrid />
+
+        {/* <ReservationBase/> */}
+      </div>
+    </CourtTypeContextProvider>
   );
 }
 

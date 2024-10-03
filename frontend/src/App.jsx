@@ -51,9 +51,9 @@ function Layout() {
 export default function App() {
   return (
     <BrowserRouter>
-      <CourtTypeContextProvider>
+     
         <Layout />
-      </CourtTypeContextProvider>
+     
     </BrowserRouter>
   );
 }

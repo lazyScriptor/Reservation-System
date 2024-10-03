@@ -1,5 +1,7 @@
-import { createCourtDetails } from "../models/CourtsModel.js";
-
+import {
+  createCourtDetails,
+  getCourtsByVenueAndCourtType,
+} from "../models/CourtsModel.js";
 
 const formatDateAndTime = (date) => {
   const formattedCreatedTime = date
@@ -33,6 +35,14 @@ export const createCourtController = async (req, res) => {
     }
   } catch (error) {
     console.error("Error occurred in create court controller: ", error);
-    res.status(500).json({ error: "An internal server error occurred while creating the court" });
+    res.status(500).json({
+      error: "An internal server error occurred while creating the court",
+    });
   }
+};
+export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
+  const venueId = req.params.venueId;
+  const courtTypeId = req.params.courtTypeId;
+  const response = await getCourtsByVenueAndCourtType(venueId, courtTypeId);
+  res.status(201).json({ message: "Court fetched successfully", response });
 };

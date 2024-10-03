@@ -1,5 +1,5 @@
 import express from "express";
-import { createCourtController } from "../controllers/CourtsController.js";
+import { createCourtController, getCourtsByVenueAndCourtTypeController } from "../controllers/CourtsController.js";
 const router = express.Router();
 
 router.get("/", (req, res) => {
@@ -7,7 +7,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create-court",createCourtController);
-
+router.get('/courts-by-venue-and-courttype/:venueId/:courtTypeId',getCourtsByVenueAndCourtTypeController)
 
 
 export default router;

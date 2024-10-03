@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { CourtTypeContext } from "../../contexts/Contexts";
 
 const array1 = [1, 2, 3, 4, 5, 6, 7];
 const array2 = [1, 2, 3, 4, 5, 6, 7, 8, 9,10];
@@ -6,6 +7,20 @@ const cost = `$14`;
 const names = [`item1`, `item2`, `item3`, `item4`, `item5`, `item6`, 'item7'];
 
 function ReservationGrid() {
+  const {
+    courts,
+    setCourts,
+    courtCreateForm,
+    setCourtCreateForm,
+    courtTypes,
+    setCourtTypes,
+    selectedVenueId,
+    setSelectedVenueId,
+    venues,
+    setVenues,
+    handleGetCourts,
+  } = useContext(CourtTypeContext);
+
   // State to track selected slots
   const [selectedSlots, setSelectedSlots] = useState({});
 
@@ -37,9 +52,9 @@ function ReservationGrid() {
       <div className="flex justify-start">
         {/* Row 2 column 1 */}
         <div className="w-14">
-          {names.map((item, index) => (
+          {courts.map((court, index) => (
             <div key={index} className="w-14 aspect-square flex items-center justify-center">
-              {item}
+              {court.court_name}
             </div>
           ))}
         </div>
@@ -50,7 +65,7 @@ function ReservationGrid() {
             gridTemplateColumns: `repeat(${array2.length}, minmax(0, 1fr))`,
           }}
         >
-          {names.map((item1, rowIndex) =>
+          {courts.map((item1, rowIndex) =>
             array2.map((item2, colIndex) => {
               // Use rowIndex + 1 and colIndex + 1 to start from 1
               const displayRowIndex = rowIndex + 1;
