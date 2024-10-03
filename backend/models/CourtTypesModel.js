@@ -38,7 +38,6 @@ export const getCourtTypeByTenantIdAndVenue = async (tenantId, venueId) => {
 export const createCourtTypeDetails = async (formData) => {
   const { courtDescription, courtName, courtType, venueName } = formData;
   try {
-    console.log(formData);
     const [response] = await pool.query(
       `
       INSERT INTO courttype(venue_id,type_name,description) VALUES(?,?,?)

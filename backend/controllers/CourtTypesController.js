@@ -86,7 +86,6 @@ export const createCourtTypeDetailsController = async (req, res) => {
 
   try {
     const response = await createCourtTypeDetails(formData);
-    console.log(response);
     res.status(201).json({
       message: "Court type details created successfully",
       courtTypeId: response.insertId, // Assuming you're returning the insert ID

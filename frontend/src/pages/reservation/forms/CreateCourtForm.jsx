@@ -22,56 +22,18 @@ const courtSchema = yup.object().shape({
 });
 
 export default function CreateCourtForm() {
-  const [venues, setVenues] = useState([]);
-  const [courtTypes, setCourtTypes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [selectedVenueId, setSelectedVenueId] = useState(""); // State to track selected venue
 
-  useEffect(() => {
-    const fetchVenueNames = async () => {
-      try {
-        const tenantId = localStorage.getItem("tenantId");
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
-        );
-        setVenues(response.data.Venues);
-      } catch (error) {
-        console.error("Error fetching venue names:", error);
-        setError("Failed to fetch venue names");
-      }
-    };
-
-    fetchVenueNames();
-  }, []);
-
-  // Fetch court types based on selected venue
-  useEffect(() => {
-    const fetchCourtTypes = async () => {
-      if (selectedVenueId) {
-        try {
-          const tenantId = localStorage.getItem("tenantId");
-          const response = await axios.get(
-            `${
-              import.meta.env.VITE_API_URL
-            }/court-types/court-type-by-id-and-venue/${tenantId}/${selectedVenueId}`
-          );
-          setCourtTypes(response.data.response);
-        } catch (error) {
-          console.error("Error fetching court types:", error);
-          setError(
-            "There are no court types under this venue,please create it first"
-          );
-        }
-      } else {
-        setCourtTypes([]); // Reset court types if no venue is selected
-      }
-    };
-
-    fetchCourtTypes();
-  }, [selectedVenueId]); // Dependency on selectedVenueId
-
-  const { courtCreateForm, setCourtCreateForm } = useContext(CourtTypeContext);
+  const {
+    courtCreateForm,
+    setCourtCreateForm,
+    courtTypes,
+    setCourtTypes,
+    selectedVenueId,
+    setSelectedVenueId,
+    venues,
+    setVenues,
+  } = useContext(CourtTypeContext);
 
   const {
     register,
@@ -98,7 +60,6 @@ export default function CreateCourtForm() {
       console.log("Court data submitted successfully");
     } catch (error) {
       console.error("Error occurred in form submit handler", error);
-      setError("Submission failed, please try again.");
     } finally {
       setLoading(false);
     }
@@ -121,7 +82,6 @@ export default function CreateCourtForm() {
               {...register("venueName")}
               className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
               onChange={(e) => {
-                setError("");
                 setCourtTypes([]);
                 setSelectedVenueId(e.target.value); // Update selected venue ID
                 register("venueName").onChange(e); // Call original onChange
@@ -138,7 +98,7 @@ export default function CreateCourtForm() {
               <p className="text-red-500">{errors.venueName.message}</p>
             )}
           </div>
-          {error && <p className="text-red-500">{error}</p>}
+
           {/* Court Type */}
           <div className="flex flex-col">
             <label>Court Type</label>
