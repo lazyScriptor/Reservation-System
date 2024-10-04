@@ -13,7 +13,7 @@ export function CourtTypeContextProvider({ children }) {
   const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
   const [timeDifference, setTimeDifference] = useState(); // State for time difference
-
+  const [clickedData, setClickedData] = useState([]); // Array to store clicked data
   const getTimeDifference = (openingTime, closingTime) => {
     // Convert the opening and closing hours into Date objects
     const opening = new Date(`1970-01-01T${openingTime}Z`);
@@ -39,7 +39,10 @@ export function CourtTypeContextProvider({ children }) {
 
         if (response.data.response) {
           const fetchedCourts = response.data.response;
-          console.log("court types in provider handlegecourts handler", fetchedCourts);
+          console.log(
+            "court types in provider handlegecourts handler",
+            fetchedCourts
+          );
           setCourts(fetchedCourts);
 
           // Calculate the minimum opening and maximum closing times
@@ -159,6 +162,8 @@ export function CourtTypeContextProvider({ children }) {
         openingHours, // Pass down the calculated opening hours
         closingHours, // Pass down the calculated closing hours
         timeDifference,
+        clickedData,
+        setClickedData,
       }}
     >
       {children}
