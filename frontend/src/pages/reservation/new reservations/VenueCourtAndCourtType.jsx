@@ -34,7 +34,7 @@ function VenueCourtAndCourtType() {
                 <button
                   key={index}
                   onClick={() => setSelectedVenueId(venue.venue_id)}
-                  className="text-black bg-gray-300 p-2 hover:bg-gray-500"
+                  className="text-black bg-gray-300 p-1 px-2 font-semibold text-xs hover:bg-gray-500"
                 >
                   {venue.venue_name}
                 </button>
@@ -50,7 +50,7 @@ function VenueCourtAndCourtType() {
                     handleGetCourts(selectedVenueId, court.court_type_id)
                   }
                   key={index}
-                  className="text-black bg-gray-300 p-2 hover:bg-gray-500"
+                  className="text-black bg-gray-300 p-1 px-2 font-semibold text-xs hover:bg-gray-500"
                 >
                   {court.type_name}
                 </button>
@@ -63,7 +63,7 @@ function VenueCourtAndCourtType() {
               {courts.map((court, index) => (
                 <button
                   key={index}
-                  className="text-black bg-gray-300 p-2 hover:bg-gray-500"
+                  className="text-black bg-gray-300 p-1 px-2 font-semibold text-xs hover:bg-gray-500"
                 >
                   {court.court_name}
                 </button>

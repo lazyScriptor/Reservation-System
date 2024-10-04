@@ -39,6 +39,7 @@ export function CourtTypeContextProvider({ children }) {
 
         if (response.data.response) {
           const fetchedCourts = response.data.response;
+          console.log("court types in provider handlegecourts handler", fetchedCourts);
           setCourts(fetchedCourts);
 
           // Calculate the minimum opening and maximum closing times
@@ -157,7 +158,7 @@ export function CourtTypeContextProvider({ children }) {
         handleGetCourts,
         openingHours, // Pass down the calculated opening hours
         closingHours, // Pass down the calculated closing hours
-        timeDifference
+        timeDifference,
       }}
     >
       {children}

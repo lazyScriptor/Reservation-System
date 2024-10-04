@@ -27,6 +27,7 @@ function ReservationGrid() {
   const [divArray, setDivArray] = useState([]);
   const [timeLabels, setTimeLabels] = useState([]);
 
+
   // Generate time labels between opening and closing hours (each 2 cells = 1 hour)
   const generateTimeLabels = () => {
     const startTime = dayjs(openingHours, "HH:mm");
@@ -102,7 +103,7 @@ function ReservationGrid() {
 
             {/* Reservation Slots */}
             <div
-              className="grid grid-flow-col auto-cols-[minmax(0,1fr)] border rounded-md"
+              className="grid grid-flow-col"
               style={{
                 gridTemplateRows: `repeat(${courts.length}, minmax(0, 1fr))`,
               }}
@@ -116,7 +117,7 @@ function ReservationGrid() {
                   return (
                     <div
                       key={`${displayRowIndex}-${displayColIndex}`}
-                      className={`border rounded-lg aspect-square w-14 hover:bg-brandBlue/40 active:bg-brandBlue border-gray-300 p-2 transition-colors duration-100 cursor-pointer text-center ${
+                      className={`border  aspect-square w-10 hover:bg-brandBlue/40 active:bg-brandBlue border-gray-400  transition-colors duration-100 cursor-pointer text-center ${
                         isSelected ? "bg-brandBlue text-white" : ""
                       }`}
                       onClick={() =>
@@ -127,6 +128,20 @@ function ReservationGrid() {
                 })
               )}
             </div>
+
+             {/* cost Labels Row */}
+             <div className="grid grid-flow-col auto-cols-[minmax(0,1fr)]">
+              {timeLabels.map((label, index) => (
+                <div
+                  key={index}
+                  className="col-span-2 text-center font-bold w-28"
+                >
+                  {label}
+                </div>
+              ))}
+            </div>
+
+
           </div>
         </div>
       </div>
