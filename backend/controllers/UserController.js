@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { getUserCredentials } from "../models/UserModel.js";
+import { getBrandNames, getUserCredentials } from "../models/UserModel.js";
+import { response } from "express";
 const saltRounds = 10;
 const myPlaintextPassword = "s0//P4$$w0rD";
 const someOtherPlaintextPassword = "not_bacon";
@@ -44,6 +45,15 @@ export const authorizeCheck = async (req, res) => {
         userFoundStatus: false,
       });
     }
+  } catch (error) {
+    throw error;
+  }
+};
+export const getBrandNamesController = async (req, res) => {
+  try {
+    const response = await getBrandNames();
+
+    return res.json(response);
   } catch (error) {
     throw error;
   }

@@ -7,6 +7,7 @@ import NavBarTop from "./components/NavBarTop";
 import Demo from "./pages/demo/Demo";
 import Reservation from "./pages/reservation/Reservation";
 import { CourtTypeContextProvider } from "./contexts/providers/CourtTypeContextProvider";
+import CustomerBase from "./pages/customers/CustomerBase";
 function Layout() {
   const location = useLocation();
   return (
@@ -42,6 +43,16 @@ function Layout() {
               <Reservation />
             </>
           }
+        />{" "}
+        <Route
+          path="/customer-bu"
+          element={
+            <>
+              <NavBarTop />
+              <NavBar />
+              <CustomerBase />
+            </>
+          }
         />
       </Routes>
     </>
@@ -51,9 +62,7 @@ function Layout() {
 export default function App() {
   return (
     <BrowserRouter>
-     
-        <Layout />
-     
+      <Layout />
     </BrowserRouter>
   );
 }

@@ -22,6 +22,8 @@ const buttonDetails = [
   {
     id: 5,
     title: "Customers",
+    destination: "/customer-bu",
+
   },
   {
     id: 6,
