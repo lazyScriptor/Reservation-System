@@ -56,3 +56,47 @@ export const addTenant = async (tenantData) => {
     throw error;
   }
 };
+export const addUser = async (userData) => {
+  try {
+    const query = `
+      INSERT INTO users (tenant_id, first_name, last_name, email, phone_number, user_type, password, profile_photo, address, membership_status, role, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const {
+      tenantId,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      userType,
+      password,
+      profilePhoto,
+      address,
+      membershipStatus,
+      role,
+      createdAt,
+      updatedAt,
+    } = userData;
+
+    const [response] = await pool.query(query, [
+      tenantId,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      userType,
+      password,
+      profilePhoto,
+      address,
+      membershipStatus,
+      role,
+      createdAt,
+      updatedAt,
+    ]);
+
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

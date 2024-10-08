@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
 import axios from "axios";
 import { CourtTypeContext } from "../../../../contexts/Contexts";
 import InputFieldCustomized from "../../../../ReUsableComponents/InputFieldCustomized";
+import NotificationPane from "../../../../components/NotificationPane";
 
+
+// Yup validation schema for the form
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
   courtType: yup.string().required("Court type is required"),
@@ -24,6 +26,11 @@ const courtSchema = yup.object().shape({
 
 export default function CreateCourtForm() {
   const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({
+    message: "",
+    type: "",
+    visible: false,
+  });
 
   const {
     courtCreateForm,
@@ -46,25 +53,44 @@ export default function CreateCourtForm() {
   });
 
   const onSubmit = async (data) => {
+    setLoading(true);
     console.log(data);
     setCourtCreateForm((prev) => ({
       ...prev,
       courtData: data,
     }));
 
-    setLoading(true);
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/court/create-court`,
         data
       );
       console.log("Court data submitted successfully");
+
+      // Show success notification
+      setNotification({
+        message: "Court created successfully!",
+        type: "success",
+        visible: true,
+      });
+
       reset();
     } catch (error) {
       console.error("Error occurred in form submit handler", error);
+
+      // Show error notification
+      setNotification({
+        message: "Failed to create court. Please try again.",
+        type: "error",
+        visible: true,
+      });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification((prev) => ({ ...prev, visible: false }));
   };
 
   return (
@@ -73,6 +99,15 @@ export default function CreateCourtForm() {
         <div className="p-4">
           <h2 className="text-xl">Create Court</h2>
         </div>
+
+        {/* Notification Pane */}
+        <NotificationPane
+          message={notification.message}
+          type={notification.type}
+          visible={notification.visible}
+          onClose={handleCloseNotification}
+        />
+
         <form
           className="flex flex-col p-2 gap-2"
           onSubmit={handleSubmit(onSubmit)}
@@ -220,7 +255,9 @@ export default function CreateCourtForm() {
               <option value="completed">Completed</option>
             </select>
             {errors.maintenanceStatus && (
-              <p className="text-red-500">{errors.maintenanceStatus.message}</p>
+              <p className="text-red-500">
+                {errors.maintenanceStatus.message}
+              </p>
             )}
           </div>
 
@@ -229,8 +266,9 @@ export default function CreateCourtForm() {
             <button
               className="bg-brandBlue-400 p-2 rounded-lg text-white hover:bg-brandBlue-500 self-center"
               type="submit"
+              disabled={loading}
             >
-              Submit
+              {loading ? "Submitting..." : "Submit"}
             </button>
             <button
               onClick={() => reset()}

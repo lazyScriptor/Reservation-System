@@ -2,10 +2,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import {
   addTenant,
+  addUser,
   getBrandNames,
   getUserCredentials,
 } from "../models/UserModel.js";
-import { response } from "express";
 const saltRounds = 10;
 const myPlaintextPassword = "s0//P4$$w0rD";
 const someOtherPlaintextPassword = "not_bacon";
@@ -72,10 +72,21 @@ export const addTenantController = async (req, res) => {
       subscriptionPlan,
       createdAt,
       updatedAt,
-    } = await req.body;
+      firstName,
+      lastName,
+      userEmail,
+      phoneNumber,
+      userType,
+      password,
+      profilePhoto,
+      address,
+      membershipStatus,
+      role,
+    } = req.body;
 
     // Validation logic (if needed) can be done here
 
+    // Prepare tenant data
     const tenantData = {
       tenantName,
       contactPerson,
@@ -87,14 +98,35 @@ export const addTenantController = async (req, res) => {
     };
 
     // Call the model to insert the tenant
-    const response = await addTenant(tenantData);
+    const tenantResponse = await addTenant(tenantData);
+
+    // Prepare user data
+    const userData = {
+      tenantId: tenantResponse.insertId, // Use the inserted tenant ID
+      firstName,
+      lastName,
+      email: userEmail,
+      phoneNumber,
+      userType,
+      // Hash the password before saving it
+      password: bcrypt.hashSync(password, saltRounds),
+      profilePhoto: profilePhoto || null,
+      address,
+      membershipStatus,
+      role,
+      createdAt,
+      updatedAt,
+    };
+
+    // Call the model to insert the user
+    await addUser(userData); // Implement the addUser function to handle the insert
 
     return res.json({
-      message: "Tenant added successfully",
-      tenantId: response.insertId,
+      message: "Tenant and user added successfully",
+      tenantId: tenantResponse.insertId,
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error adding tenant" });
+    res.status(500).json({ message: "Error adding tenant and user" });
   }
 };
