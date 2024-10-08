@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addTenantController,
   authorizeCheck,
   getBrandNamesController,
 } from "../controllers/UserController.js";
@@ -12,4 +13,5 @@ router.get("/", (req, res) => {
 
 router.post("/authorize-check", authorizeCheck);
 router.get("/brand-names", getBrandNamesController);
+router.post("/tenant/add", addTenantController);
 export default router;

@@ -55,6 +55,7 @@ export default function CreateCourtTypeForm() {
         `${import.meta.env.VITE_API_URL}/court-types/create-court-type`,
         data
       );
+      reset();
       console.log("Court data submitted successfully");
     } catch (error) {
       console.error("Error occurred in form submit handler", error);

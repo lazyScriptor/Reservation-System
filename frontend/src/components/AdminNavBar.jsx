@@ -19,12 +19,12 @@ const buttonDetails = [
   //   title: "Demo",
   //   destination: "/demo",
   // },
-  // {
-  //   id: 5,
-  //   title: "Customers",
-  //   destination: "/customer-bu",
+  {
+    id: 5,
+    title: "tenant management",
+    destination: "/tenant-a",
 
-  // },
+  },
   // {
   //   id: 6,
   //   title: "Pricing",

@@ -19,7 +19,39 @@ export const getBrandNames = async () => {
       ON users.tenant_id=tenant.tenant_id
       WHERE users.user_type='client' AND users.membership_status= 'active'
       `);
-      return response
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+export const addTenant = async (tenantData) => {
+  try {
+    const query = `
+      INSERT INTO tenant (tenant_name, contact_person, contact_email, contact_phone, subscription_plan, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const {
+      tenantName,
+      contactPerson,
+      contactEmail,
+      contactPhone,
+      subscriptionPlan,
+      createdAt,
+      updatedAt,
+    } = tenantData;
+
+    const [response] = await pool.query(query, [
+      tenantName,
+      contactPerson,
+      contactEmail,
+      contactPhone,
+      subscriptionPlan,
+      createdAt,
+      updatedAt,
+    ]);
+
+    return response;
   } catch (error) {
     throw error;
   }

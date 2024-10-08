@@ -59,6 +59,7 @@ export default function CreateCourtForm() {
         data
       );
       console.log("Court data submitted successfully");
+      reset();
     } catch (error) {
       console.error("Error occurred in form submit handler", error);
     } finally {

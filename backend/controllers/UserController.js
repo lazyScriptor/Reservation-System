@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { getBrandNames, getUserCredentials } from "../models/UserModel.js";
+import {
+  addTenant,
+  getBrandNames,
+  getUserCredentials,
+} from "../models/UserModel.js";
 import { response } from "express";
 const saltRounds = 10;
 const myPlaintextPassword = "s0//P4$$w0rD";
@@ -56,5 +60,41 @@ export const getBrandNamesController = async (req, res) => {
     return res.json(response);
   } catch (error) {
     throw error;
+  }
+};
+export const addTenantController = async (req, res) => {
+  try {
+    const {
+      tenantName,
+      contactPerson,
+      contactEmail,
+      contactPhone,
+      subscriptionPlan,
+      createdAt,
+      updatedAt,
+    } = await req.body;
+
+    // Validation logic (if needed) can be done here
+
+    const tenantData = {
+      tenantName,
+      contactPerson,
+      contactEmail,
+      contactPhone,
+      subscriptionPlan,
+      createdAt,
+      updatedAt,
+    };
+
+    // Call the model to insert the tenant
+    const response = await addTenant(tenantData);
+
+    return res.json({
+      message: "Tenant added successfully",
+      tenantId: response.insertId,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error adding tenant" });
   }
 };

@@ -11,6 +11,7 @@ import BasicUserNavBar from "./components/BasicUserNavBar";
 import RerservationClient from "./pages/reservation/client/RerservationClient";
 import DashboardAdminBase from "./pages/ADMIN/dashboard/DashboardAdminBase";
 import AdminNavBar from "./components/AdminNavBar";
+import TenantBase from "./pages/ADMIN/tenant/TenantBase";
 export default function Layout() {
   return (
     <>
@@ -103,6 +104,16 @@ export default function Layout() {
                 <NavBarTop />
                 <NavBar />
                 <Reservation />
+              </>
+            }
+          />
+          <Route
+            path="/tenant-a"
+            element={
+              <>
+                <NavBarTop />
+                <AdminNavBar />
+                <TenantBase />
               </>
             }
           />

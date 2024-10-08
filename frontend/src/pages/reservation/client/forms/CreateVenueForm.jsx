@@ -47,9 +47,10 @@ export default function CreateVenueForm() {
         {
           ...data,
           tenantId: localStorage.getItem("tenantId"),
-          
         }
       );
+      console.log("Form submitted succeddfully");
+      reset();
     } catch (error) {
       console.error("Error occurred in form submit handler", error);
       throw new Error("Error occurred in form submit handler", error); // Optional: rethrow or handle it
