@@ -2,9 +2,10 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputFieldCustomized from "../../../ReUsableComponents/InputFieldCustomized"; // Customize if needed
-import { CourtTypeContext } from "../../../contexts/Contexts";
+
 import axios from "axios";
+import { CourtTypeContext } from "../../../../contexts/Contexts";
+import InputFieldCustomized from "../../../../ReUsableComponents/InputFieldCustomized";
 
 // Yup validation schema for the venue form
 const venueSchema = yup.object().shape({

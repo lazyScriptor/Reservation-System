@@ -6,8 +6,12 @@ import ReservationGrid from "./ReservationGrid";
 import VenueCourtAndCourtType from "./new reservations/VenueCourtAndCourtType";
 import NewReservationGrid from "./new reservations/NewReservationGrid";
 import CourtTypeContextProvider from "../../contexts/providers/CourtTypeContextProvider";
+import { useParams } from "react-router-dom";
 
 function Reservation() {
+  const { tenantId } = useParams();
+  localStorage.setItem("tenantId", tenantId);
+
   return (
     <CourtTypeContextProvider>
       <div className="bg-gray-200 text-gray-700">

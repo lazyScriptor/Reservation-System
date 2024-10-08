@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { CourtTypeContext } from "../../../contexts/Contexts";
-import InputFieldCustomized, { SelectFieldCustomized } from "../../../ReUsableComponents/InputFieldCustomized";
 
 import axios from "axios";
+import { CourtTypeContext } from "../../../../contexts/Contexts";
+import InputFieldCustomized, { SelectFieldCustomized } from "../../../../ReUsableComponents/InputFieldCustomized";
 
 // Yup validation schema
 const courtSchema = yup.object().shape({
@@ -107,7 +107,7 @@ export default function CreateCourtTypeForm() {
             <SelectFieldCustomized
               name="venueName"
               register={register}
-              options={venues.map(venue => ({
+              options={venues.map((venue) => ({
                 value: venue.venue_id,
                 label: venue.venue_name,
               }))} // Map venues to options

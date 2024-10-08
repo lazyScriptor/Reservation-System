@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import CreateVenueForm from "./forms/CreateVenueForm";
 
 import CategoryTypeButton from "../../components/CategoryTypeButton";
-import CreateCourtTypeForm from "./forms/CreateCourtTypeForm";
-import CreateCourtForm from "./forms/CreateCourtForm";
+import CreateVenueForm from "./client/forms/CreateVenueForm";
+import CreateCourtForm from "./client/forms/CreateCourtForm";
+import CreateCourtTypeForm from "./client/forms/CreateCourtTypeForm";
 
 function ReservationBase() {
   const [disableStatus, setDisableStatus] = useState(false);

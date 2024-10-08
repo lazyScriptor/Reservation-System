@@ -4,7 +4,7 @@ const buttonDetails = [
   {
     id: 1,
     title: "Home",
-    destination:"/dashboard-c"
+    destination:"/dashboard-bu"
   },
   {
     id: 2,
@@ -14,26 +14,25 @@ const buttonDetails = [
     id: 3,
     title: "Products",
   },
-  {
-    id: 4,
-    title: "Demo",
-    destination: "/demo",
-  },
+  // {
+  //   id: 4,
+  //   title: "Demo",
+  //   destination: "/demo",
+  // },
   {
     id: 5,
     title: "Customers",
-    destination: "/customer-c",
+    destination: "/customer-bu",
 
   },
-  {
-    id: 6,
-    title: "Create",
-    destination:"/forms-c"
-  },
-  {
-    id: 7,
-    title: "Contact",
-  },
+  // {
+  //   id: 6,
+  //   title: "Pricing",
+  // },
+  // {
+  //   id: 7,
+  //   title: "Contact",
+  // },
   {
     id: 8,
     title: "Logout",
@@ -41,7 +40,7 @@ const buttonDetails = [
   },
 ];
 
-function NavBar() {
+function BasicUserNavBar() {
   const handleNavigation = (button) => {
     // Only navigate if the button has a destination
     if (button.destination) {
@@ -68,4 +67,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default BasicUserNavBar;

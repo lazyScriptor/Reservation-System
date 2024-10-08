@@ -13,9 +13,11 @@ export const getUserCredentials = async (email) => {
 export const getBrandNames = async () => {
   try {
     const [response] = await pool.query(`
-      SELECT user_id,tenant_id,first_name,email,brand_name
+      SELECT users.user_id,users.tenant_id,users.first_name,users.email,tenant.tenant_name
       FROM users
-      WHERE user_type='client' AND membership_status= 'active'
+      JOIN tenant
+      ON users.tenant_id=tenant.tenant_id
+      WHERE users.user_type='client' AND users.membership_status= 'active'
       `);
       return response
   } catch (error) {

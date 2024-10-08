@@ -74,21 +74,28 @@ export default function Login() {
 
       if (authDetails.authorizationStatus) {
         const decodedToken = decodeJWT(authDetails.token);
-        {
-          localStorage.setItem("token", authDetails.token);
-          localStorage.setItem("userId", decodedToken.data.user_id);
-          localStorage.setItem("tenantId", decodedToken.data.tenant_id);
-          localStorage.setItem("userType", decodedToken.data.user_type);
-          localStorage.setItem("userName", [
-            `${decodedToken.data.first_name} 
-          ${decodedToken.data.last_name}`,
-          ]);
-        }
+        console.log(decodedToken);
+        if (decodedToken.data.user_type == "client") {
+          {
+            localStorage.setItem("token", authDetails.token);
+            localStorage.setItem("userId", decodedToken.data.user_id);
+            localStorage.setItem("tenantId", decodedToken.data.tenant_id);
+            localStorage.setItem("userType", decodedToken.data.user_type);
+            localStorage.setItem("userName", [
+              `${decodedToken.data.first_name} 
+            ${decodedToken.data.last_name}`,
+            ]);
+          }
 
-        navigate("/dashboard");
-      } else {
-        setErrorToogle(true);
-        setErrorMessage(authDetails.message);
+          navigate("/dashboard-c");
+        } else if (decodedToken.data.user_type == "basicuser") {
+          navigate("/dashboard-bu");
+        } else if (decodedToken.data.user_type == "admin") {
+          navigate("/dashboard-a");
+        } else {
+          setErrorToogle(true);
+          setErrorMessage(authDetails.message);
+        }
       }
     } catch (error) {
       setErrorMessage(

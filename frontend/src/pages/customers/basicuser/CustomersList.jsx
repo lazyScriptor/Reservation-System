@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CustomersList() {
+  const navigate = useNavigate();
   const [ObjectList, setObjectList] = useState([
     {
       id: 1,
@@ -22,7 +24,9 @@ function CustomersList() {
     };
     func();
   }, []);
-
+  const handleClick = (object) => {
+    navigate(`/brand/${object.tenant_id}`);
+  };
   return (
     <div className="py-8">
       <div className="container">
@@ -35,7 +39,12 @@ function CustomersList() {
         {/* Customer section */}
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5">
           {ObjectList.map((object, index) => (
-            <div>{object.brand_name}</div>
+            <div
+              className="hover:cursor-pointer font-semibold hover:text-white transition-all duration-200 border-2 border-white hover:border-gray-400 text-center p-4 rounded-md hover:bg-gray-300 bg-gray-200" 
+              onClick={() => handleClick(object)}
+            >
+              {object.tenant_name}
+            </div>
           ))}
         </div>
       </div>
