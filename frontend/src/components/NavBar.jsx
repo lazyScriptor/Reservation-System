@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const buttonDetails = [
   {
     id: 1,
     title: "Home",
-    destination:"/dashboard-c"
+    destination: "/dashboard-c",
   },
   {
     id: 4,
@@ -15,21 +15,27 @@ const buttonDetails = [
     id: 5,
     title: "Customers",
     destination: "/customer-c",
-
   },
   {
     id: 6,
     title: "Create",
-    destination:"/forms-c"
+    destination: "/forms-c",
   },
   {
     id: 8,
     title: "Logout",
-    destination:"/"
+    destination: "/",
   },
 ];
-
 function NavBar() {
+  const [ppImgUrl, setPpImgUrl] = useState("");
+  const googleObjectString = localStorage.getItem("googleObject");
+  useEffect(() => {
+    if (googleObjectString) {
+      const googleObject = JSON.parse(googleObjectString); // Convert back to an object
+      setPpImgUrl(googleObject.googleImg);
+    }
+  }, [googleObjectString]);
   const handleNavigation = (button) => {
     // Only navigate if the button has a destination
     if (button.destination) {
@@ -39,7 +45,7 @@ function NavBar() {
   const navigate = useNavigate();
   return (
     <div className="bg-gray-200">
-      <div className="container hidden md:flex overflow-auto">
+      <div className="container hidden md:flex overflow-auto relative">
         <ul className="flex p-1 gap-4 ">
           {buttonDetails.map((button, index) => (
             <li
@@ -51,6 +57,7 @@ function NavBar() {
             </li>
           ))}
         </ul>
+        <img src={ppImgUrl} alt="profile pic" />
       </div>
     </div>
   );

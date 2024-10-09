@@ -86,20 +86,20 @@ export default function Login() {
       setErrorToogle(true);
     }
   };
-
-  const handleGoogleSuccess = (response) => {
-    const token = response.credential;
-    const decodedToken = decodeJWT(token);
-    console.log(decodedToken);
-
-    // You can handle the token and user details here (e.g., send it to your backend)
-    localStorage.setItem("token", token);
-    navigate("/dashboard-c"); // Navigate to client dashboard as an example
-  };
-
   const handleGoogleFailure = () => {
     setErrorMessage("Google login failed. Please try again.");
     setErrorToogle(true);
+  };
+  const handleGoogleSuccess = async (response) => {
+    const token = response.credential; // Get the ID token
+    const decodedToken = await decodeJWT(token); // Decode the token to get user info
+    const googleObj = {
+      googleName: decodedToken.name,
+      googleImg: decodedToken.picture,
+      googleEmail:decodedToken.email
+    };
+    localStorage.setItem("googleObject", JSON.stringify(googleObj));
+    navigate("/dashboard-bu"); // Navigate to client dashboard as an example
   };
 
   return (
