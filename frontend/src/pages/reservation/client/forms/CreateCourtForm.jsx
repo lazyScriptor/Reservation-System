@@ -7,7 +7,6 @@ import { CourtTypeContext } from "../../../../contexts/Contexts";
 import InputFieldCustomized from "../../../../ReUsableComponents/InputFieldCustomized";
 import NotificationPane from "../../../../components/NotificationPane";
 
-
 // Yup validation schema for the form
 const courtSchema = yup.object().shape({
   courtName: yup.string().required("Court name is required"),
@@ -95,10 +94,8 @@ export default function CreateCourtForm() {
 
   return (
     <div>
-      <div className="container shadow-lg rounded-xl">
-        <div className="p-4">
-          <h2 className="text-xl">Create Court</h2>
-        </div>
+      <div className="shadow-lg rounded-xl p-4  border-gray-100 border-2 relative">
+        <h2 className="text-xl font-bold py-2 text-gray-500">Create Court</h2>
 
         {/* Notification Pane */}
         <NotificationPane
@@ -109,15 +106,19 @@ export default function CreateCourtForm() {
         />
 
         <form
-          className="flex flex-col p-2 gap-2"
+          className="flex flex-col  gap-2"
           onSubmit={handleSubmit(onSubmit)}
         >
           {/* Venue Name */}
           <div className="flex flex-col">
-            <label>Venue Name</label>
+            <label>Venue </label>
+            <p className="text-sm text-gray-500 py-2">
+              Select the Venue ,Then you will see the court types relevant to
+              the venue
+            </p>
             <select
               {...register("venueName")}
-              className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              className={`border border-gray-300 p-1 pl-2 rounded-md w-full text-brandOrange/80 focus:border-0 ring-brandOrange/60 focus:ring-brandOrange`}
               onChange={(e) => {
                 setCourtTypes([]);
                 setSelectedVenueId(e.target.value); // Update selected venue ID
@@ -139,9 +140,12 @@ export default function CreateCourtForm() {
           {/* Court Type */}
           <div className="flex flex-col">
             <label>Court Type</label>
+            <p className="text-sm text-gray-500 py-2">
+              Select the most appropriate court type relevant to the court
+            </p>
             <select
               {...register("courtType")}
-              className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              className={`border border-gray-300 p-1 pl-2 rounded-md w-full text-brandOrange/80 focus:border-0 ring-brandOrange/60 focus:ring-brandOrange`}
             >
               <option value="">Select</option>
               {courtTypes.map((courtType) => (
@@ -161,6 +165,9 @@ export default function CreateCourtForm() {
           {/* Court Name */}
           <div>
             <label>Court Name</label>
+            <p className="text-sm text-gray-500 py-2">
+              This name will be the court name that your customers will see
+            </p>
             <InputFieldCustomized
               type="text"
               name="courtName"
@@ -174,6 +181,10 @@ export default function CreateCourtForm() {
           {/* Cost per Slot */}
           <div>
             <label>Cost per Slot</label>
+            <p className="text-sm text-gray-500 py-2">
+              Enter the hourly rate, you will be able to change special hourly
+              rate later
+            </p>
             <InputFieldCustomized
               type="number"
               name="costPerSlot"
@@ -187,14 +198,24 @@ export default function CreateCourtForm() {
           {/* Court Status */}
           <div className="flex flex-col">
             <label>Court Status</label>
+            <p className="text-sm text-gray-500 py-2">
+              Customers will only be able to make reservations if the court is
+              in the available status
+            </p>
             <select
               {...register("courtStatus")}
-              className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              className={`border border-gray-300 p-1 pl-2 rounded-md w-full text-brandOrange/80 focus:border-0 ring-brandOrange/60 focus:ring-brandOrange`}
             >
               <option value="">Select</option>
-              <option value="available">Available</option>
-              <option value="booked">Booked</option>
-              <option value="under_maintenance">Under Maintenance</option>
+              <option className="text-green-600" value="available">
+                Available
+              </option>
+              <option className="text-red-600" value="booked">
+                Booked
+              </option>
+              <option className="text-red-600" value="under_maintenance">
+                Under Maintenance
+              </option>
             </select>
             {errors.courtStatus && (
               <p className="text-red-500">{errors.courtStatus.message}</p>
@@ -229,7 +250,7 @@ export default function CreateCourtForm() {
             <label>Booking time limit</label>
             <select
               {...register("bookingLimit")}
-              className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              className={`border border-gray-300 p-1 pl-2 rounded-md w-full text-brandOrange/80 focus:border-0 ring-brandOrange/60 focus:ring-brandOrange`}
             >
               <option value="">Select</option>
               <option value="00:15:00">15 mins</option>
@@ -247,7 +268,7 @@ export default function CreateCourtForm() {
             <label>Maintenance Status</label>
             <select
               {...register("maintenanceStatus")}
-              className="border border-gray-300 p-1 pl-2 self-center rounded-md w-full lg:max-w-xl"
+              className={`border border-gray-300 p-1 pl-2 rounded-md w-full text-brandOrange/80 focus:border-0 ring-brandOrange/60 focus:ring-brandOrange`}
             >
               <option value="">Select</option>
               <option value="none">None</option>
@@ -255,24 +276,22 @@ export default function CreateCourtForm() {
               <option value="completed">Completed</option>
             </select>
             {errors.maintenanceStatus && (
-              <p className="text-red-500">
-                {errors.maintenanceStatus.message}
-              </p>
+              <p className="text-red-500">{errors.maintenanceStatus.message}</p>
             )}
           </div>
 
+          <div className="h-20" />
           {/* Submit and Reset Buttons */}
-          <div className="flex p-4 gap-4 self-center">
+          <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
             <button
-              className="bg-brandBlue-400 p-2 rounded-lg text-white hover:bg-brandBlue-500 self-center"
+              className="bg-brandBlue/80 hover:bg-brandBlue p-2 px-8 text-white hover:bg-brandBlue-500 self-center"
               type="submit"
-              disabled={loading}
             >
-              {loading ? "Submitting..." : "Submit"}
+              Submit
             </button>
             <button
               onClick={() => reset()}
-              className="bg-primary/80 p-2 rounded-lg text-white hover:bg-primary self-center"
+              className="bg-gray-300 p-2  text-white hover:bg-primary self-center"
               type="reset"
             >
               Reset

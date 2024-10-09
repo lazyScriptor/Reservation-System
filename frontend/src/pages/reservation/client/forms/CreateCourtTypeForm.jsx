@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
 import axios from "axios";
 import { CourtTypeContext } from "../../../../contexts/Contexts";
-import InputFieldCustomized, { SelectFieldCustomized } from "../../../../ReUsableComponents/InputFieldCustomized";
+import InputFieldCustomized, {
+  SelectFieldCustomized,
+} from "../../../../ReUsableComponents/InputFieldCustomized";
 
 // Yup validation schema
 const courtSchema = yup.object().shape({
@@ -70,41 +71,34 @@ export default function CreateCourtTypeForm() {
 
   return (
     <div>
-      <div className="container shadow-lg rounded-xl">
-        <div className="p-4 ">
-          <h2 className="text-xl">Create Court Type</h2>
-        </div>
-        <div>
-          <form
-            className="flex flex-col p-2 gap-2"
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            {/* Court type name */}
-            <div>
-              <label>Court type name </label>
-              <InputFieldCustomized
-                type="text"
-                name="courtName"
-                register={register}
-              />
-              {errors.courtName && (
-                <p className="text-red-500 h-6">{errors.courtName.message}</p>
-              )}
-            </div>
-
-            {/* Court Type */}
-            <SelectFieldCustomized
-              name="courtType"
+      <div className="shadow-lg rounded-xl p-4 border-gray-100 border-2 relative ">
+        <h2 className="text-xl font-bold py-2 text-gray-500">
+          Create Court Type
+        </h2>
+        <form
+          className="flex flex-col py-2 gap-2"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* Court Name */}
+          <div>
+            <label>Court Type Name</label>
+            <p className="text-sm text-gray-500 py-2">
+              If you have 2 Tennis courts in the
+              <strong> following Venue</strong> , Create the "Court Type Name"
+              as Tennis.
+            </p>
+            <InputFieldCustomized
+              type="text"
+              name="courtName"
               register={register}
-              options={courtTypeOptions} // Pass the options for court types
-              error={errors.courtType} // Pass the error state
-              helperText={errors.courtType?.message} // Pass the helper text
-              label="Schedule Type" // Pass the label
-              setErrorMessage={() => {}} // Placeholder function for setting error messages
-              setErrorToogle={() => {}} // Placeholder function for toggling error state
             />
+            {errors.courtName && (
+              <p className="text-red-500 h-6">{errors.courtName.message}</p>
+            )}
+          </div>
 
-            {/* Venue Name */}
+          {/* Venue Name */}
+          <div>
             <SelectFieldCustomized
               name="venueName"
               register={register}
@@ -114,44 +108,64 @@ export default function CreateCourtTypeForm() {
               }))} // Map venues to options
               error={errors.venueName} // Pass the error state
               helperText={errors.venueName?.message} // Pass the helper text
-              label="Venue Name" // Pass the label
+              label="Venue" // Pass the label
+              description="Select the venue that you want to create court type"
               setErrorMessage={() => {}} // Placeholder function for setting error messages
               setErrorToogle={() => {}} // Placeholder function for toggling error state
             />
+          </div>
+          {/* Court Type */}
+          <div>
+            <SelectFieldCustomized
+              name="courtType"
+              register={register}
+              options={courtTypeOptions} // Pass the options for court types
+              error={errors.courtType} // Pass the error state
+              helperText={errors.courtType?.message} // Pass the helper text
+              label="Court Type Schedule mode" // Pass the label
+              description={`There are ${courtTypeOptions.length} reservation palette options available at the moment For more information, check the demo`}
+              setErrorMessage={() => {}} // Placeholder function for setting error messages
+              setErrorToogle={() => {}} // Placeholder function for toggling error state
+            />
+          </div>
 
-            {/* Court description */}
-            <div>
-              <label>Court description </label>
-              <InputFieldCustomized
-                type="text"
-                name="courtDescription"
-                register={register}
-              />
-              {errors.courtDescription && (
-                <p className="text-red-500 h-6">
-                  {errors.courtDescription.message}
-                </p>
-              )}
-            </div>
+          {/* Court Description */}
+          <div>
+            <label>Court Description</label>
+            <p className="text-sm text-gray-500 py-2">
+              Describe the court (optional). This may include dimensions,
+              surface type, etc.  (only visible to you)
+            </p>
+            <InputFieldCustomized
+              type="text"
+              name="courtDescription"
+              register={register}
+            />
+            {errors.courtDescription && (
+              <p className="text-red-500 h-6">
+                {errors.courtDescription.message}
+              </p>
+            )}
+          </div>
 
+          <div className="h-20"/>
             {/* Submit and Reset Buttons */}
-            <div className="flex p-4 gap-4 self-center">
+            <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
               <button
-                className="bg-brandBlue-400 p-2 rounded-lg text-white hover:bg-brandBlue-500 self-center"
+                className="bg-brandBlue/80 hover:bg-brandBlue p-2 px-8 text-white hover:bg-brandBlue-500 self-center"
                 type="submit"
               >
                 Submit
               </button>
               <button
                 onClick={() => reset()}
-                className="bg-primary/80 p-2 rounded-lg text-white hover:bg-primary self-center"
+                className="bg-gray-300 p-2  text-white hover:bg-primary self-center"
                 type="reset"
               >
                 Reset
               </button>
             </div>
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   );

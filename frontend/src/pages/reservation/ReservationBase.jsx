@@ -15,7 +15,7 @@ function ReservationBase() {
   };
 
   return (
-    <div className="py-8">
+    <div className="py-8 bg-gray-50">
       <div className="container  rounded-xl py-8">
         <div className="grid grid-col-1 lg:grid-cols-3 gap-4">
           {/* Left bar */}
@@ -46,7 +46,7 @@ function ReservationBase() {
             </div>
           </div>
           {/* Right bar */}
-          <div className="col-span-2 p-4">
+          <div className="col-span-2 p-4 ">
             {count === 1 ? (
               <CreateVenueForm />
             ) : count === 2 ? (

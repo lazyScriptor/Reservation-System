@@ -42,6 +42,7 @@ export function SelectFieldCustomized({
   setErrorMessage,
   setErrorToogle,
   label,
+  description,
 }) {
   // Function to clear error when select is modified
   const handleChange = (e) => {
@@ -52,6 +53,7 @@ export function SelectFieldCustomized({
   return (
     <div className="flex flex-col">
       <label className="mb-1">{label}</label>
+      <p className="text-sm text-gray-500 py-2">{description}</p>
       <select
         name={name}
         onChange={handleChange} // Call the handleChange function on select change

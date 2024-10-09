@@ -59,7 +59,7 @@ export default function CreateVenueForm() {
 
   return (
     <div>
-      <div className="shadow-lg rounded-xl p-4  border-gray-100 border-2">
+      <div className="shadow-lg rounded-xl p-4  border-gray-100 border-2 relative">
        
           <h2 className="text-xl font-bold py-2 text-gray-500">Create Venue</h2>
       
@@ -191,18 +191,18 @@ export default function CreateVenueForm() {
                 <p className="text-red-500 h-6">{errors.status.message}</p>
               )}
             </div>
-
+              <div className="h-20"/>
             {/* Submit and Reset Buttons */}
-            <div className="flex p-4 gap-4 self-center">
+            <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
               <button
-                className="bg-brandBlue-400 p-2 rounded-lg text-white hover:bg-brandBlue-500 self-center"
+                className="bg-brandBlue/80 hover:bg-brandBlue p-2 px-8 text-white hover:bg-brandBlue-500 self-center"
                 type="submit"
               >
                 Submit
               </button>
               <button
                 onClick={() => reset()}
-                className="bg-primary/80 p-2 rounded-lg text-white hover:bg-primary self-center"
+                className="bg-gray-300 p-2  text-white hover:bg-primary self-center"
                 type="reset"
               >
                 Reset
