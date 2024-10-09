@@ -7,32 +7,11 @@ const buttonDetails = [
     destination:"/dashboard-bu"
   },
   {
-    id: 2,
-    title: "Features",
-  },
-  {
-    id: 3,
-    title: "Products",
-  },
-  // {
-  //   id: 4,
-  //   title: "Demo",
-  //   destination: "/demo",
-  // },
-  {
     id: 5,
     title: "Customers",
     destination: "/customer-bu",
 
   },
-  // {
-  //   id: 6,
-  //   title: "Pricing",
-  // },
-  // {
-  //   id: 7,
-  //   title: "Contact",
-  // },
   {
     id: 8,
     title: "Logout",

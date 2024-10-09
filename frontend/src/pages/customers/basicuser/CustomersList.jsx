@@ -37,7 +37,7 @@ function CustomersList() {
           <hr className="border-2 rounded-full w-10 self-center  border-brandBlue " />
         </div>
         {/* Customer section */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {ObjectList.map((object, index) => (
             <div
               className="hover:cursor-pointer font-semibold hover:text-white transition-all duration-200 border-2 border-white hover:border-gray-400 text-center p-4 rounded-md hover:bg-gray-300 bg-gray-200" 

@@ -7,14 +7,6 @@ const buttonDetails = [
     destination:"/dashboard-c"
   },
   {
-    id: 2,
-    title: "Features",
-  },
-  {
-    id: 3,
-    title: "Products",
-  },
-  {
     id: 4,
     title: "Demo",
     destination: "/demo",
@@ -29,10 +21,6 @@ const buttonDetails = [
     id: 6,
     title: "Create",
     destination:"/forms-c"
-  },
-  {
-    id: 7,
-    title: "Contact",
   },
   {
     id: 8,

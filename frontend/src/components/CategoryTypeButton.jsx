@@ -1,7 +1,8 @@
 import React from "react";
 
-function CategoryTypeButton({
+export default function CategoryTypeButton({
   name,
+  description,
   color,
   hoverTextColor,
   handleClick,
@@ -12,13 +13,16 @@ function CategoryTypeButton({
     <button
       disabled={disableStatus}
       onClick={handleClick} // Use the handleClick prop directly
-      className={`bg-${color} group aspect-video w-28 rounded-lg relative transition-all duration-700 hover:bg-opacity-50 hover:text-${hoverTextColor}`}
+      className={`bg-${color} flex flex-col items-start p-4 gap-2 border-gray-100 border-2 hover:border-${hoverTextColor} justify-start shadow-${hoverTextColor} rounded-xl shadow-md hover:shadow-lg active:shadow-xl  transition-all duration-700  `}
     >
-      <p className="absolute transition-all duration-700 group-hover:text-${hoverTextColor} bottom-0 p-4 text-white font-bold text-xs">
+      <p
+        className={`transition-all text-start duration-700  hover:text-${hoverTextColor} text-gray-500 font-bold `}
+      >
         {name}
       </p>
+      <p className={` text-xs text-start text-gray-500`}>{description}</p>
     </button>
   );
 }
 
-export default CategoryTypeButton;
+ 

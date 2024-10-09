@@ -59,18 +59,21 @@ export default function CreateVenueForm() {
 
   return (
     <div>
-      <div className="container shadow-lg rounded-xl">
-        <div className="p-4">
-          <h2 className="text-xl">Create Venue</h2>
-        </div>
+      <div className="shadow-lg rounded-xl p-4  border-gray-100 border-2">
+       
+          <h2 className="text-xl font-bold py-2 text-gray-500">Create Venue</h2>
+      
         <div>
           <form
-            className="flex flex-col p-2 gap-2"
+            className="flex flex-col py-2 gap-2"
             onSubmit={handleSubmit(onSubmit)}
           >
             {/* Venue Name */}
             <div>
               <label>Venue Name</label>
+              <p className="text-sm text-gray-500 py-2">
+                Enter the name of your venue (e.g., "Downtown Sports Complex").
+              </p>
               <InputFieldCustomized
                 type="text"
                 name="venueName"
@@ -84,6 +87,9 @@ export default function CreateVenueForm() {
             {/* Venue Address */}
             <div>
               <label>Venue Address</label>
+              <p className="text-sm text-gray-500 py-2">
+                Provide the full address of your venue.
+              </p>
               <InputFieldCustomized
                 type="text"
                 name="venueAddress"
@@ -99,6 +105,10 @@ export default function CreateVenueForm() {
             {/* Venue Description (optional) */}
             <div>
               <label>Venue Description</label>
+              <p className="text-sm text-gray-500 py-2">
+                Describe your venue (optional). This can include features,
+                services, or amenities.
+              </p>
               <InputFieldCustomized
                 type="text"
                 name="venueDescription"
@@ -114,6 +124,9 @@ export default function CreateVenueForm() {
             {/* Contact Info */}
             <div>
               <label>Contact Info</label>
+              <p className="text-sm text-gray-500 py-2">
+                Add a phone number or email address for inquiries.This number will be displayed to the customer base
+              </p>
               <InputFieldCustomized
                 type="text"
                 name="contactInfo"
@@ -127,6 +140,9 @@ export default function CreateVenueForm() {
             {/* Opening Hours */}
             <div>
               <label>Opening Hours</label>
+              <p className="text-sm text-gray-500 py-2">
+                When does your venue open? (e.g., 08:00 AM)
+              </p>
               <InputFieldCustomized
                 type="time"
                 name="openingHours"
@@ -142,6 +158,9 @@ export default function CreateVenueForm() {
             {/* Closing Hours */}
             <div>
               <label>Closing Hours</label>
+              <p className="text-sm text-gray-500 py-2">
+                When does your venue close? (e.g., 10:00 PM)
+              </p>
               <InputFieldCustomized
                 type="time"
                 name="closingHours"
@@ -157,6 +176,9 @@ export default function CreateVenueForm() {
             {/* Status */}
             <div className="flex flex-col">
               <label>Status</label>
+              <p className="text-sm text-gray-500 py-2">
+                Select whether the venue is currently open or closed.
+              </p>
               <select
                 {...register("status")}
                 className="border border-gray-300 p-1 pl-2 rounded-md w-full lg:max-w-xl"

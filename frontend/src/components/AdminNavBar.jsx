@@ -4,39 +4,17 @@ const buttonDetails = [
   {
     id: 1,
     title: "Home",
-    destination:"/dashboard-a"
+    destination: "/dashboard-a",
   },
-  {
-    id: 2,
-    title: "Features",
-  },
-  {
-    id: 3,
-    title: "Products",
-  },
-  // {
-  //   id: 4,
-  //   title: "Demo",
-  //   destination: "/demo",
-  // },
   {
     id: 5,
     title: "tenant management",
     destination: "/tenant-a",
-
   },
-  // {
-  //   id: 6,
-  //   title: "Pricing",
-  // },
-  // {
-  //   id: 7,
-  //   title: "Contact",
-  // },
   {
     id: 8,
     title: "Logout",
-    destination:"/"
+    destination: "/",
   },
 ];
 
