@@ -69,7 +69,7 @@ export default function Login() {
           "userName",
           `${decodedToken.data.first_name} ${decodedToken.data.last_name}`
         );
-
+        localStorage.setItem("googleObject",'')
         if (decodedToken.data.user_type === "client") navigate("/dashboard-c");
         else if (decodedToken.data.user_type === "basicuser")
           navigate("/dashboard-bu");

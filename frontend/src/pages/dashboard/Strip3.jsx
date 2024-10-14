@@ -30,7 +30,7 @@ export default function Strip3() {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {componentDetails.map((item, index) => (
-            <div className="flex flex-col items-center  justify-start py-8">
+            <div key={index} className="flex flex-col items-center  justify-start py-8">
               {item.image && React.createElement(item.image, { className: "text-brandBlueDark ", size: 100 })} {/* Tailwind styles */}
               {/* Render the icon if available */}
               <h2 className="text-brandBlueDark text-lg font-semibold">{item.title}</h2>

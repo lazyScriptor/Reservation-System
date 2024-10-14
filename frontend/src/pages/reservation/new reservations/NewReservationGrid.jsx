@@ -66,7 +66,7 @@ function NewReservationGrid() {
       </div>
 
       {/* Grid for court and time labels */}
-      <div className="flex justify-center p-8 border-2 border-gray-500">
+      <div className="flex justify-center p-8 ">
         <div className="">
           {courts.map((court, index) => (
             <div

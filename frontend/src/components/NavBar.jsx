@@ -28,14 +28,8 @@ const buttonDetails = [
   },
 ];
 function NavBar() {
-  const [ppImgUrl, setPpImgUrl] = useState("");
-  const googleObjectString = localStorage.getItem("googleObject");
-  useEffect(() => {
-    if (googleObjectString) {
-      const googleObject = JSON.parse(googleObjectString); // Convert back to an object
-      setPpImgUrl(googleObject.googleImg);
-    }
-  }, [googleObjectString]);
+
+
   const handleNavigation = (button) => {
     // Only navigate if the button has a destination
     if (button.destination) {
@@ -57,7 +51,7 @@ function NavBar() {
             </li>
           ))}
         </ul>
-        <img src={ppImgUrl} alt="profile pic" />
+      
       </div>
     </div>
   );
