@@ -15,6 +15,7 @@ export function CourtTypeContextProvider({ children }) {
   const [timeDifference, setTimeDifference] = useState(); // State for time difference
   const [clickedData, setClickedData] = useState([]); // Array to store clicked data
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [holidayArray, setHolidayArray] = useState([]);
   const getTimeDifference = (openingTime, closingTime) => {
     // Convert the opening and closing hours into Date objects
     const opening = new Date(`1970-01-01T${openingTime}Z`);
@@ -147,23 +148,38 @@ export function CourtTypeContextProvider({ children }) {
   }, [venues]);
 
   useEffect(() => {
-    const resultArray = [];
-    courts.forEach((item) => {
-      resultArray.push({
-        venueId: item.venue_id,
-        courtId: item.court_id,
-        selectedDate: (selectedDate),
-      });
-    });
-   
-    const getHolidayData =async () =>{
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/court-types/court-type-by-id-and-venue/${tenantId}/${selectedVenueId}`
-      );
+    // Build the holidayArray from courts
+    const newHolidayArray = courts.map((item) => ({
+      venueId: item.venue_id,
+      courtId: item.court_id,
+      selectedDate: selectedDate,
+    }));
+  
+    setHolidayArray(newHolidayArray);
+  
+    const getHolidayData = async () => {
+      try {
+        // Only send the request if there is data in the courts array
+        if (newHolidayArray.length > 0) {
+          const response = await axios.post(
+            `${import.meta.env.VITE_API_URL}/close/times`, // Change to POST request
+            { holidayArray: newHolidayArray } // Send holidayArray in the body
+          );
+  
+          // Handle the response (e.g., store the data in a state or process it)
+          console.log("Holiday data response:", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching holiday data:", error);
+      }
+    };
+  
+    if (newHolidayArray.length > 0) {
+      getHolidayData();
     }
-  }, [selectedDate, courts]);
+  }, [selectedDate, courts]); // Only trigger when courts or selectedDate change
+  
+
   return (
     <CourtTypeContext.Provider
       value={{

@@ -1,25 +1,24 @@
 import {
   getHolidayByParamsNonRecurring,
   getHolidayByParamsRecurring,
-} from "../models/HolidayModel";
+} from "../models/HolidayModel.js";
 
-export const getHolidayByParamsController = async (req, res) => {
+export const getHolidayByParamsController = async (item) => {
   try {
-    const { holidayDate, venueId, courtId } = req.params;
+    const { venueId,courtId,selectedDate } = item;
+  
 
-    const recurring = await getHolidayByParamsRecurring(holidayDate, venueId, courtId);
-    const nonRecurring = await getHolidayByParamsNonRecurring(holidayDate, venueId, courtId);
-    
-    const response = {
-      data: {
-        recurring,
-        nonRecurring,
-      },
+    // Fetch recurring and non-recurring holidays
+    const recurring = await getHolidayByParamsRecurring(venueId, courtId, selectedDate);
+    const nonRecurring = await getHolidayByParamsNonRecurring(venueId, courtId, selectedDate);
+
+    // Instead of sending a response, return the data
+    return {
+      recurring: recurring.data,
+      nonRecurring: nonRecurring.data,
     };
-    
-    return res.status(200).json(response);
   } catch (error) {
     console.error(error); 
-    return res.status(500).json({ error: 'Internal Server Error' });
+    throw error; // Propagate error up to be handled by the caller
   }
 };

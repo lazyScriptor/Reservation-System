@@ -3,6 +3,7 @@ import userRoute from "./routes/User.js";
 import venueRoute from "./routes/Venue.js";
 import courtsRoute from "./routes/Courts.js";
 import courtTypesRoute from "./routes/CourtTypes.js";
+import holidayAndClosing from "./routes/HolidayANDClosing.js";
 import cors from "cors";
 
 const app = express();
@@ -31,6 +32,7 @@ app.use("/user", userRoute);
 app.use("/venue", venueRoute);
 app.use("/court", courtsRoute);
 app.use("/court-types", courtTypesRoute);
+app.use("/close", holidayAndClosing);
 
 app.listen(3005, "192.168.10.75", () => {
   console.log("Server starts on port 3005");

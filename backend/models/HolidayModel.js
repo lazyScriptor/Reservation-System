@@ -1,8 +1,8 @@
 import pool from "../databaseConnection.js";
 export const getHolidayByParamsRecurring = async (
-  holidayDate,
   venueId,
-  courtId
+  courtId,
+  selectedDate
 ) => {
   try {
     const [response] = await pool.query(
@@ -11,7 +11,7 @@ export const getHolidayByParamsRecurring = async (
       FROM holidays
       WHERE holiday_date =? OR venue_id=? OR court_id=? AND recurring_status = 1
       `,
-      [holidayDate, venueId, courtId]
+      [selectedDate, venueId, courtId]
     );
 
     return { status: 200, data: response };
@@ -20,9 +20,9 @@ export const getHolidayByParamsRecurring = async (
   }
 };
 export const getHolidayByParamsNonRecurring = async (
-  holidayDate,
   venueId,
-  courtId
+  courtId,
+  selectedDate
 ) => {
   try {
     const [response] = await pool.query(
@@ -31,7 +31,7 @@ export const getHolidayByParamsNonRecurring = async (
       FROM holidays
       WHERE holiday_date =? OR venue_id=? OR court_id=? AND recurring_status = 0
       `,
-      [holidayDate, venueId, courtId]
+      [selectedDate, venueId, courtId]
     );
 
     return { status: 200, data: response };

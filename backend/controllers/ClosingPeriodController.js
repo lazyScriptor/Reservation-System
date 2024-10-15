@@ -1,30 +1,30 @@
 import {
   getPeriodByCidVidSingleDate,
   getPeriodByCidVidDateRange,
-} from "../models/ClosingPeriodsModel"; // Adjust the import path as necessary
+} from "../models/ClosingPeriodModel.js";
 
-export const getPeriodByCidVidSingleDateController = async (req, res) => {
+export const getPeriodByCidVidSingleDateController = async (item) => {
   try {
-    const { holidayDate, venueId, courtId } = req.params;
+    const { venueId, courtId, selectedDate } = item;
 
     const singleDateResponse = await getPeriodByCidVidSingleDate(
-      holidayDate,
       venueId,
-      courtId
+      courtId,
+      selectedDate
     );
     const dateRangeResponse = await getPeriodByCidVidDateRange(
-      holidayDate,
       venueId,
-      courtId
+      courtId,
+      selectedDate
     );
 
     const combinedResponse = {
       singleDate: singleDateResponse,
       dateRange: dateRangeResponse,
     };
-    return res.status(200).json(combinedResponse);
+    return combinedResponse;
   } catch (error) {
-    console.error(error); 
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error(error);
+    return { error: "Internal Server Error" };
   }
 };

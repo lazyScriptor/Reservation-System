@@ -1,9 +1,9 @@
 import pool from "../databaseConnection.js";
 
 export const getPeriodByCidVidSingleDate = async (
-  holidayDate,
   venueId,
-  courtId
+  courtId,
+  selectedDate
 ) => {
   try {
     const [response] = await pool.query(
@@ -12,8 +12,9 @@ export const getPeriodByCidVidSingleDate = async (
       FROM closingperiods
       WHERE venue_id = ? OR court_id = ? AND date_type = 1 AND start_date = ?
       `,
-      [venueId, courtId, holidayDate]
+      [venueId, courtId, selectedDate]
     );
+  
     return response;
   } catch (error) {
     throw error;
@@ -21,9 +22,9 @@ export const getPeriodByCidVidSingleDate = async (
 };
 
 export const getPeriodByCidVidDateRange = async (
-  holidayDate,
   venueId,
-  courtId
+  courtId,
+  selectedDate
 ) => {
   try {
     const [response] = await pool.query(
@@ -34,12 +35,10 @@ export const getPeriodByCidVidDateRange = async (
       AND (? BETWEEN start_date AND end_date) 
       AND date_type <> 1
       `,
-      [venueId, courtId, holidayDate]
+      [venueId, courtId, selectedDate]
     );
     return response;
   } catch (error) {
     throw error;
   }
 };
-
-
