@@ -40,7 +40,6 @@ export const createVenueDetails = async (formData) => {
 };
 
 export const getVenuesFromId = async (tenantId) => {
-
   try {
     const [response] = await pool.query(
       `
@@ -48,9 +47,25 @@ export const getVenuesFromId = async (tenantId) => {
     `,
       [tenantId]
     );
-  
+
     return response;
   } catch (error) {
     throw ("Error occured in the getVenueFromId model", error);
+  }
+};
+export const getVenuesByIdAndOpenCloseTime = async (venueId) => {
+  try {
+    const [response] = await pool.query(
+      `
+    SELECT * 
+    FROM venue
+    WHERE venue_id = ? AND status <> 'open';
+
+    `,
+      [venueId]
+    );
+    return { status: 200, data: response };
+  } catch (error) {
+    throw error;
   }
 };

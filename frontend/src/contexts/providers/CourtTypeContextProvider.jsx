@@ -14,6 +14,7 @@ export function CourtTypeContextProvider({ children }) {
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
   const [timeDifference, setTimeDifference] = useState(); // State for time difference
   const [clickedData, setClickedData] = useState([]); // Array to store clicked data
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const getTimeDifference = (openingTime, closingTime) => {
     // Convert the opening and closing hours into Date objects
     const opening = new Date(`1970-01-01T${openingTime}Z`);
@@ -145,6 +146,24 @@ export function CourtTypeContextProvider({ children }) {
     setCourtTypes([]);
   }, [venues]);
 
+  useEffect(() => {
+    const resultArray = [];
+    courts.forEach((item) => {
+      resultArray.push({
+        venueId: item.venue_id,
+        courtId: item.court_id,
+        selectedDate: (selectedDate),
+      });
+    });
+   
+    const getHolidayData =async () =>{
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_URL
+        }/court-types/court-type-by-id-and-venue/${tenantId}/${selectedVenueId}`
+      );
+    }
+  }, [selectedDate, courts]);
   return (
     <CourtTypeContext.Provider
       value={{
@@ -164,6 +183,8 @@ export function CourtTypeContextProvider({ children }) {
         timeDifference,
         clickedData,
         setClickedData,
+        selectedDate,
+        setSelectedDate,
       }}
     >
       {children}

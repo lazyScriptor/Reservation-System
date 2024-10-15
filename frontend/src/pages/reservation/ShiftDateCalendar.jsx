@@ -7,14 +7,20 @@ import { TextField } from "@mui/material";
 import { CourtTypeContext } from "../../contexts/Contexts";
 
 export default function ShiftDateCalendar() {
-  const { courts, openingHours, clickedData, setClickedData, closingHours } =
-    useContext(CourtTypeContext);
-  
+  const {
+    courts,
+    openingHours,
+    clickedData,
+    setClickedData,
+    closingHours,
+    selectedDate,
+    setSelectedDate,
+  } = useContext(CourtTypeContext);
+
   const handleDateChange = (newValue) => {
-  
-    console.log("Selected date:", newValue.format("DD-MM-YYYY"));
-    
-    
+    const selectedDate = newValue.format("YYYY-MM-DD");
+    setSelectedDate(selectedDate);
+    console.log(selectedDate);
   };
 
   return (

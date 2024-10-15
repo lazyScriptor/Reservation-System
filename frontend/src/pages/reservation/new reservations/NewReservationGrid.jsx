@@ -26,6 +26,9 @@ function NewReservationGrid() {
     generateTimeLabels();
   }, [courts]);
 
+  useEffect(() => {
+    
+  }, []);
   const handleGridClick = (court, label) => {
     if (
       dayjs(label, "HH:mm").isAfter(dayjs(court.opening_hours, "HH:mm")) ||
