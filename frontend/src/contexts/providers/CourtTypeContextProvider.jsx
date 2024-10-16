@@ -31,6 +31,7 @@ export function CourtTypeContextProvider({ children }) {
   };
   // Fetch courts by venue and court type and calculate the minimum and maximum time
   const handleGetCourts = async (venueId, courtTypeId) => {
+    
     const formattedDate = selectedDate.toISOString().slice(0, 10); // '2024-10-16'
 
     if (venueId && courtTypeId) {
@@ -46,6 +47,7 @@ export function CourtTypeContextProvider({ children }) {
           "court types in provider handlegecourts handler",
           fetchedCourts
         );
+        
         if (response.data.response) {
           setCourts(fetchedCourts);
 
