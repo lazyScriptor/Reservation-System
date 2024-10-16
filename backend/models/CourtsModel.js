@@ -35,8 +35,9 @@ export const createCourtDetails = async (formData) => {
     throw ("Error occured in courts model create courts details", error);
   }
 };
+
 export const getCourtsByVenueAndCourtType = async (venueId, courtTypeId) => {
-  const [response] = await pool.query(
+  const [response1] = await pool.query(
     `
     SELECT * 
     FROM court
@@ -44,5 +45,21 @@ export const getCourtsByVenueAndCourtType = async (venueId, courtTypeId) => {
     `,
     [venueId, courtTypeId]
   );
-  return response;
+
+  const [response2] = await pool.query(
+    `
+    SELECT courtcost.*
+    FROM courtcost
+    JOIN court ON courtcost.courtcost_courtid = court.court_id
+    JOIN courttype ON court.court_type_id = courttype.court_type_id
+    WHERE court.venue_id = ? AND courttype.court_type_id = ? ;
+
+    `,
+    [venueId, courtTypeId]
+  );
+  return {
+    CourtsByVenueAndCourtType: response1,
+    specialCost: response2,
+  };
+  return;
 };

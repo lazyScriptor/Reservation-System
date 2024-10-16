@@ -26,16 +26,17 @@ export const getPeriodByCidVidDateRange = async (
   courtId,
   selectedDate
 ) => {
+ 
   try {
     const [response] = await pool.query(
       `
       SELECT *
       FROM closingperiods
-      WHERE (venue_id = ? OR court_id IS NULL) 
+      WHERE (venue_id = ? OR court_id = ?) 
       AND date_type <> 1
       AND (? BETWEEN start_date AND end_date);
       `,
-      [venueId, selectedDate] // Here we change courtId to `NULL` check
+      [venueId, courtId, selectedDate] // Here we change courtId to `NULL` check
     );
 
     return response;

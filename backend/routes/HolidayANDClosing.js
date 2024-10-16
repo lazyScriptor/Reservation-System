@@ -22,7 +22,10 @@ router.post("/times", async (req, res) => {
           ...item,
           selectedDate: new Date(item.selectedDate).toISOString().slice(0, 10),
         });
-        const holidayResponse = await getHolidayByParamsController(item);
+        const holidayResponse = await getHolidayByParamsController({
+          ...item,
+          selectedDate: new Date(item.selectedDate).toISOString().slice(0, 10),
+        });
 
         // Create the object and push to completeArray
         completeArray.push({

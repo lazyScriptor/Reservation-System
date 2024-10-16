@@ -46,7 +46,7 @@ export function CourtTypeContextProvider({ children }) {
             fetchedCourts
           );
           setCourts(fetchedCourts);
-
+         console.log(fetchedCourts)
           // Calculate the minimum opening and maximum closing times
           const { minOpeningTime, maxClosingTime } = fetchedCourts.reduce(
             (acc, court) => {

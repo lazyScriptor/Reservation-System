@@ -16,6 +16,7 @@ function NewReservationGrid() {
       labels.push(currentTime.format("HH:mm"));
       currentTime = currentTime.add(30, "minute"); // Add 30 minutes
     }
+ 
     setTimeLabels(labels);
   };
 
@@ -27,7 +28,7 @@ function NewReservationGrid() {
   }, [courts]);
 
   useEffect(() => {
-    
+
   }, []);
   const handleGridClick = (court, label) => {
     if (
