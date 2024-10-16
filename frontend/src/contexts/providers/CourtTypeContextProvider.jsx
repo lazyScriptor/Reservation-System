@@ -31,22 +31,24 @@ export function CourtTypeContextProvider({ children }) {
   };
   // Fetch courts by venue and court type and calculate the minimum and maximum time
   const handleGetCourts = async (venueId, courtTypeId) => {
+    const formattedDate = selectedDate.toISOString().slice(0, 10); // '2024-10-16'
+
     if (venueId && courtTypeId) {
       try {
         const response = await axios.get(
           `${
             import.meta.env.VITE_API_URL
-          }/court/courts-by-venue-and-courttype/${venueId}/${courtTypeId}`
+          }/court/courts-by-venue-and-courttypee/${venueId}/${courtTypeId}/${formattedDate}`
         );
 
+        const fetchedCourts = response.data.response;
+        console.log(
+          "court types in provider handlegecourts handler",
+          fetchedCourts
+        );
         if (response.data.response) {
-          const fetchedCourts = response.data.response;
-          console.log(
-            "court types in provider handlegecourts handler",
-            fetchedCourts
-          );
           setCourts(fetchedCourts);
-         console.log(fetchedCourts)
+
           // Calculate the minimum opening and maximum closing times
           const { minOpeningTime, maxClosingTime } = fetchedCourts.reduce(
             (acc, court) => {
@@ -154,9 +156,9 @@ export function CourtTypeContextProvider({ children }) {
       courtId: item.court_id,
       selectedDate: selectedDate,
     }));
-  
+
     setHolidayArray(newHolidayArray);
-  
+
     const getHolidayData = async () => {
       try {
         // Only send the request if there is data in the courts array
@@ -165,7 +167,7 @@ export function CourtTypeContextProvider({ children }) {
             `${import.meta.env.VITE_API_URL}/close/times`, // Change to POST request
             { holidayArray: newHolidayArray } // Send holidayArray in the body
           );
-  
+
           // Handle the response (e.g., store the data in a state or process it)
           console.log("Holiday data response:", response.data);
         }
@@ -173,12 +175,11 @@ export function CourtTypeContextProvider({ children }) {
         console.error("Error fetching holiday data:", error);
       }
     };
-  
+
     if (newHolidayArray.length > 0) {
       getHolidayData();
     }
   }, [selectedDate, courts]); // Only trigger when courts or selectedDate change
-  
 
   return (
     <CourtTypeContext.Provider

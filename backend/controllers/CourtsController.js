@@ -2,6 +2,8 @@ import {
   createCourtDetails,
   getCourtsByVenueAndCourtType,
 } from "../models/CourtsModel.js";
+import { getPeriodByCidVidSingleDateController } from "./ClosingPeriodController.js";
+import { getHolidayByParamsController } from "./HolidayController.js";
 
 const formatDateAndTime = (date) => {
   const formattedCreatedTime = date
@@ -40,53 +42,65 @@ export const createCourtController = async (req, res) => {
     });
   }
 };
+
 export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
   const venueId = req.params.venueId;
   const courtTypeId = req.params.courtTypeId;
+  const selectedDate = req.params.formattedDate;
 
   try {
     const response = await getCourtsByVenueAndCourtType(venueId, courtTypeId);
 
     // Process Courts by Venue and Court Type (updatedResponse1)
-    const updatedResponse = response.CourtsByVenueAndCourtType.map((court) => {
-      const { opening_hours, closing_hours, cost_per_hour } = court;
+    const updatedResponse = response.CourtsByVenueAndCourtType.map(
+      (court, index) => {
+        const { opening_hours, closing_hours, cost_per_hour, court_id } = court;
 
-      // Convert opening and closing hours to Date objects
-      const startTime = new Date(`1970-01-01T${opening_hours}Z`);
-      const endTime = new Date(`1970-01-01T${closing_hours}Z`);
+        // Convert opening and closing hours to Date objects
+        const startTime = new Date(`1970-01-01T${opening_hours}Z`);
+        const endTime = new Date(`1970-01-01T${closing_hours}Z`);
 
-      // Generate time slots with 30-minute intervals
-      const timeLabels = [];
-      let currentSlotId = 1;
-      let currentTime = startTime;
+        // Generate time slots with 30-minute intervals
+        const timeLabels = [];
+        let currentSlotId = 1;
+        let currentTime = startTime;
 
-      while (currentTime < endTime) {
-        const nextTime = new Date(currentTime.getTime() + 30 * 60000); // 30 minutes added
-        timeLabels.push({
-          slotId: currentSlotId++,
-          startTime: currentTime.toISOString().substring(11, 16), // Get only time part HH:MM
-          endTime: nextTime.toISOString().substring(11, 16),
-          slotcost: cost_per_hour, // Initially set to cost_per_hour, can be updated later
-        });
-        currentTime = nextTime;
+        while (currentTime < endTime) {
+          const nextTime = new Date(currentTime.getTime() + 30 * 60000); // 30 minutes added
+          timeLabels.push({
+            slotId: currentSlotId++,
+            startTime: currentTime.toISOString().substring(11, 16), // Get only time part HH:MM
+            endTime: nextTime.toISOString().substring(11, 16),
+            slotcost: cost_per_hour, // Initially set to cost_per_hour, can be updated later
+            disableStatus: null,
+          });
+          currentTime = nextTime;
+        }
+
+        return {
+          ...court,
+          timeLabels,
+        };
       }
-
-      return {
-        ...court,
-        timeLabels,
-      };
-    });
+    );
 
     // Process specialCost (updatedResponse2)
     response.specialCost.forEach((specialCost) => {
-      const { courtcost_courtid, courtcost_starttime, courtcost_endtime, courtcost_cost } = specialCost;
+      const {
+        courtcost_courtid,
+        courtcost_starttime,
+        courtcost_endtime,
+        courtcost_cost,
+      } = specialCost;
 
       // Convert start and end times of special cost to Date objects
       const specialStartTime = new Date(`1970-01-01T${courtcost_starttime}Z`);
       const specialEndTime = new Date(`1970-01-01T${courtcost_endtime}Z`);
 
       // Find the matching court from updatedResponse
-      const matchingCourt = updatedResponse.find((court) => court.court_id == courtcost_courtid);
+      const matchingCourt = updatedResponse.find(
+        (court) => court.court_id == courtcost_courtid
+      );
       if (matchingCourt) {
         matchingCourt.timeLabels.forEach((slot) => {
           // Convert slot start and end times to Date objects for comparison
@@ -94,27 +108,22 @@ export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
           const slotEndTime = new Date(`1970-01-01T${slot.endTime}Z`);
 
           // Check if the slot falls within or overlaps with the special cost time range
-         
           if (
-            (slotStartTime >= specialStartTime && slotStartTime < specialEndTime) || // Slot starts in the range
+            (slotStartTime >= specialStartTime &&
+              slotStartTime < specialEndTime) || // Slot starts in the range
             (slotEndTime > specialStartTime && slotEndTime <= specialEndTime) || // Slot ends in the range
             (slotStartTime <= specialStartTime && slotEndTime >= specialEndTime) // Slot fully contains the range
           ) {
             // Update the slotcost with the special cost
-            
             slot.slotcost = courtcost_cost;
           }
-        
         });
       }
     });
 
-    res.status(201).json({
-      message: "Courts fetched successfully",
-      response: updatedResponse,
-    });
+    return updatedResponse;
   } catch (error) {
-    console.error(error);
+    console.error("Error occurred in get courts controller: ", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
