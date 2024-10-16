@@ -10,11 +10,11 @@ export const getPeriodByCidVidSingleDate = async (
       `
       SELECT *
       FROM closingperiods
-      WHERE venue_id = ? OR court_id = ? AND date_type = 1 AND start_date = ?
+      WHERE (venue_id = ? OR court_id = ?) AND date_type = 1 AND start_date = ?
       `,
       [venueId, courtId, selectedDate]
     );
-  
+
     return response;
   } catch (error) {
     throw error;
@@ -31,12 +31,13 @@ export const getPeriodByCidVidDateRange = async (
       `
       SELECT *
       FROM closingperiods
-      WHERE (venue_id = ? OR court_id = ?) 
-      AND (? BETWEEN start_date AND end_date) 
+      WHERE (venue_id = ? OR court_id IS NULL) 
       AND date_type <> 1
+      AND (? BETWEEN start_date AND end_date);
       `,
-      [venueId, courtId, selectedDate]
+      [venueId, selectedDate] // Here we change courtId to `NULL` check
     );
+
     return response;
   } catch (error) {
     throw error;

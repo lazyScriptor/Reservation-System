@@ -9,6 +9,7 @@ import CourtTypeContextProvider from "../../contexts/providers/CourtTypeContextP
 import { useParams } from "react-router-dom";
 
 function Reservation() {
+  const handleClick = () => {};
   const { tenantId } = useParams();
   localStorage.setItem("tenantId", tenantId);
 
@@ -26,3 +27,4 @@ function Reservation() {
 }
 
 export default Reservation;
+''

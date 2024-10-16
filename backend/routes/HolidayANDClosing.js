@@ -11,37 +11,33 @@ router.get("/", (req, res) => {
 
 router.post("/times", async (req, res) => {
   const array = req.body.holidayArray;
+  let completeArray = [];
 
   try {
     // Use Promise.all to handle async operations within the array
-    const results = await Promise.all(
+    await Promise.all(
       array.map(async (item) => {
-        const singleDateResponse = await getPeriodByCidVidSingleDateController(
-          item
-        );
+        // Fetch the singleDate and holiday responses
+        const singleDataResponse = await getPeriodByCidVidSingleDateController({
+          ...item,
+          selectedDate: new Date(item.selectedDate).toISOString().slice(0, 10),
+        });
         const holidayResponse = await getHolidayByParamsController(item);
 
-        console.log("output",{
+        // Create the object and push to completeArray
+        completeArray.push({
           venue_id: item.venueId,
           court_id: item.courtId,
+          selectedDate: new Date(item.selectedDate).toLocaleDateString(),
           response: {
-            singleDate: singleDateResponse,
+            closingPeriods: singleDataResponse,
             holidays: holidayResponse,
           },
         });
-        return {
-          venue_id: item.venueId,
-          court_id: item.courtId,
-          response: {
-            singleDate: singleDateResponse,
-            holidays: holidayResponse,
-          },
-        };
       })
     );
 
-    // Send all results after processing the entire array
-    return res.status(200).json(results);
+    return res.status(200).json(completeArray);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
