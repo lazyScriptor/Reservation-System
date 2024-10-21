@@ -17,6 +17,7 @@ export const getHolidayByParamsController = async (item) => {
     return {
       recurring: recurring.data,
       nonRecurring: nonRecurring.data,
+      
     };
   } catch (error) {
     console.error(error); 
