@@ -166,6 +166,7 @@ export function CourtTypeContextProvider({ children }) {
             { holidayArray: newHolidayArray }
           );
           console.log("Holiday data response:", response.data);
+          setHolidayArray(...holidayArray, response.data);
         }
       } catch (error) {
         console.error("Error fetching holiday data:", error);
@@ -198,6 +199,8 @@ export function CourtTypeContextProvider({ children }) {
         setClickedData,
         selectedDate,
         setSelectedDate,
+        holidayArray,
+        setHolidayArray,
       }}
     >
       {children}

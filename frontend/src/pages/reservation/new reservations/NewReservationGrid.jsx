@@ -2,8 +2,16 @@ import React, { useContext, useState } from "react";
 import { CourtTypeContext } from "../../../contexts/Contexts";
 
 function NewReservationGrid() {
-  const { courts, openingHours, clickedData, setClickedData, closingHours } =
-    useContext(CourtTypeContext);
+  const {
+    courts,
+    openingHours,
+    clickedData,
+    setClickedData,
+    selectedDate,
+    closingHours,
+    holidayArray,
+    setHolidayArray,
+  } = useContext(CourtTypeContext);
 
   // State to track hover position and hovered slotId
   const [hoverData, setHoverData] = useState({
@@ -21,7 +29,7 @@ function NewReservationGrid() {
       show: true,
       x: clientX,
       y: clientY,
-      slotcost, // Pass the correct slotId
+      slotcost, // Pass the correct slotcost
     });
   };
 
@@ -35,10 +43,55 @@ function NewReservationGrid() {
     });
   };
 
+  const isHolidayTimeLabel = (courtId, slot) => {
+    // console.log("Checking for holiday - Court:", courtId, "Slot:", slot.startTime);
+
+    const holidayCourt = holidayArray.find(
+      (holiday) => holiday.court_id == courtId
+    );
+
+    if (!holidayCourt) {
+      return false; // No holiday data means the slot is available
+    }
+
+    // Ensure holidayCourt has the response and closingPeriods
+    if (!holidayCourt.response || !holidayCourt.response.closingPeriods) {
+      return false;
+    }
+
+    const { singleDate, dateRange, dateRangeRecurring } =
+      holidayCourt.response.closingPeriods;
+    const allPeriods = [...singleDate, ...dateRange, ...dateRangeRecurring];
+
+    // Normalize function to format time for comparison
+    const normalizeTime = (time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
+    };
+
+    // Check if the slot time matches any timeLabel in any of the periods
+    for (const period of allPeriods) {
+      if (
+        period.timeLabels &&
+        period.timeLabels.some(
+          (timeLabel) =>
+            normalizeTime(timeLabel.startTime) === normalizeTime(slot.startTime)
+        )
+      ) {
+        return true; // Slot is during a holiday period
+      }
+    }
+
+    // No matching holiday found
+    return false;
+  };
+
   return (
     <div>
       {/* Display all clicked data */}
-      <div className="flex  p-4">
+      <div className="flex p-4">
         {clickedData.map((item, index) => (
           <div key={index} className="border p-2 mb-2">
             <p>
@@ -55,15 +108,15 @@ function NewReservationGrid() {
       </div>
 
       {/* Grid for court and time labels */}
-      <div className="flex justify-center p-8 ">
-        <div className="">
+      <div className="flex justify-center p-8">
+        <div>
           {courts &&
             courts.map((court, index) => (
               <div
                 key={index}
                 className={`flex gap-2 justify-center items-center font-semibold`}
               >
-                <h2 className="flex text-xs w-20 whitespace-nowrap ">
+                <h2 className="flex text-xs w-20 whitespace-nowrap">
                   {court.court_name}
                 </h2>
 
@@ -77,7 +130,13 @@ function NewReservationGrid() {
                         }
                         onMouseLeave={handleMouseLeave}
                         className={`border border-gray-400 aspect-square w-10 flex justify-center items-center ${
-                          court.status === "available"
+                          isHolidayTimeLabel(
+                            court.court_id,
+                            label,
+                            selectedDate
+                          )
+                            ? "bg-purple-300"
+                            : court.status === "available"
                             ? "bg-green-300"
                             : court.status === "booked"
                             ? "bg-yellow-300"
@@ -105,7 +164,7 @@ function NewReservationGrid() {
             left: `${hoverData.x + 10}px`,
           }}
         >
-          Slot Cost : {hoverData.slotcost}
+          Slot Cost: {hoverData.slotcost}
         </div>
       )}
     </div>
