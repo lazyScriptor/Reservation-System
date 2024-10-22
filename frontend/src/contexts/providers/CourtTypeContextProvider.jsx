@@ -31,7 +31,7 @@ export function CourtTypeContextProvider({ children }) {
   };
   // Fetch courts by venue and court type and calculate the minimum and maximum time
   const handleGetCourts = async (venueId, courtTypeId) => {
-    const formattedDate = selectedDate.toISOString().slice(0, 10); // '2024-10-16'
+    const formattedDate = selectedDate?.toISOString().slice(0, 10); // '2024-10-16'
 
     if (venueId && courtTypeId) {
       try {
@@ -148,16 +148,15 @@ export function CourtTypeContextProvider({ children }) {
   useEffect(() => {
     setCourtTypes([]);
   }, [venues]);
-
   useEffect(() => {
     const newHolidayArray = courts.map((item) => ({
       venueId: item.venue_id,
       courtId: item.court_id,
       selectedDate: selectedDate,
     }));
-
+  
     setHolidayArray(newHolidayArray);
-
+  
     const getHolidayData = async () => {
       try {
         if (newHolidayArray.length > 0) {
@@ -166,17 +165,24 @@ export function CourtTypeContextProvider({ children }) {
             { holidayArray: newHolidayArray }
           );
           console.log("Holiday data response:", response.data);
-          setHolidayArray(...holidayArray, response.data);
+  
+          // Ensure response.data is an array before setting state
+          if (Array.isArray(response.data)) {
+            setHolidayArray((prevArray) => [...prevArray, ...response.data]);
+          } else {
+            console.error("Expected response data to be an array:", response.data);
+          }
         }
       } catch (error) {
         console.error("Error fetching holiday data:", error);
       }
     };
-
+  
     if (newHolidayArray.length > 0) {
       getHolidayData();
     }
   }, [selectedDate, courts]);
+  
 
   return (
     <CourtTypeContext.Provider

@@ -51,35 +51,63 @@ export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
   try {
     const response = await getCourtsByVenueAndCourtType(venueId, courtTypeId);
 
-    // Process Courts by Venue and Court Type (updatedResponse1)
+    // Find the minimum start time and maximum end time across all courts
+    let minStartTime = new Date("1970-01-01T23:59:00Z");
+    let maxEndTime = new Date("1970-01-01T00:00:00Z");
+
+    response.CourtsByVenueAndCourtType.forEach((court) => {
+      const startTime = new Date(`1970-01-01T${court.opening_hours}Z`);
+      const endTime = new Date(`1970-01-01T${court.closing_hours}Z`);
+
+      if (startTime < minStartTime) minStartTime = startTime;
+      if (endTime > maxEndTime) maxEndTime = endTime;
+    });
+
+    // Create the full range of time slots from minStartTime to maxEndTime
+    const fullTimeSlots = [];
+    let currentSlotTime = minStartTime;
+    let currentSlotId = 1;
+
+    while (currentSlotTime < maxEndTime) {
+      const nextSlotTime = new Date(currentSlotTime.getTime() + 30 * 60000); // 30 minutes added
+      fullTimeSlots.push({
+        slotId: currentSlotId++,
+        startTime: currentSlotTime.toISOString().substring(11, 16),
+        endTime: nextSlotTime.toISOString().substring(11, 16),
+        slotcost: 0, // Placeholder cost, will be updated per court
+        disableStatus: 1, // Disabled by default, will be updated if applicable
+      });
+      currentSlotTime = nextSlotTime;
+    }
+
+    // Process Courts by Venue and Court Type (updatedResponse)
     const updatedResponse = response.CourtsByVenueAndCourtType.map((court) => {
       const { opening_hours, closing_hours, cost_per_hour, court_id, status } =
         court;
 
       // Convert opening and closing hours to Date objects
-      const startTime = new Date(`1970-01-01T${opening_hours}Z`);
-      const endTime = new Date(`1970-01-01T${closing_hours}Z`);
+      const courtStartTime = new Date(`1970-01-01T${opening_hours}Z`);
+      const courtEndTime = new Date(`1970-01-01T${closing_hours}Z`);
 
-      // Generate time slots with 30-minute intervals
-      const timeLabels = [];
-      let currentSlotId = 1;
-      let currentTime = startTime;
+      // Copy the fullTimeSlots and mark those slots that match the court's active hours
+      const courtTimeLabels = fullTimeSlots.map((slot) => {
+        const slotStartTime = new Date(`1970-01-01T${slot.startTime}Z`);
+        const slotEndTime = new Date(`1970-01-01T${slot.endTime}Z`);
 
-      while (currentTime < endTime) {
-        const nextTime = new Date(currentTime.getTime() + 30 * 60000); // 30 minutes added
-        timeLabels.push({
-          slotId: currentSlotId++,
-          startTime: currentTime.toISOString().substring(11, 16), // Get only time part HH:MM
-          endTime: nextTime.toISOString().substring(11, 16),
-          slotcost: cost_per_hour, // Initially set to cost_per_hour, can be updated later
-          disableStatus: status === "available" ? 0 : 1,
-        });
-        currentTime = nextTime;
-      }
+        // Determine if the slot is within the court's operating hours
+        if (slotStartTime >= courtStartTime && slotEndTime <= courtEndTime) {
+          return {
+            ...slot,
+            slotcost: cost_per_hour, // Set court's cost per hour for active slots
+            disableStatus: status === "available" ? 0 : 1, // Enable or disable based on court status
+          };
+        }
+        return slot; // Keep disabled slots outside the court's hours
+      });
 
       return {
         ...court,
-        timeLabels,
+        timeLabels: courtTimeLabels,
       };
     });
 
