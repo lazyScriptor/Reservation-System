@@ -1,53 +1,38 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { CourtTypeContext } from "../../../contexts/Contexts";
-import dayjs from "dayjs";
 
 function NewReservationGrid() {
-  const [timeLabels, setTimeLabels] = useState([]);
-
-  const generateTimeLabels = () => {
-    const startTime = dayjs(openingHours, "HH:mm");
-    const endTime = dayjs(closingHours, "HH:mm");
-
-    const labels = [];
-
-    let currentTime = startTime;
-    while (currentTime.isBefore(endTime) || currentTime.isSame(endTime)) {
-      labels.push(currentTime.format("HH:mm"));
-      currentTime = currentTime.add(30, "minute"); // Add 30 minutes
-    }
- 
-    setTimeLabels(labels);
-  };
-
   const { courts, openingHours, clickedData, setClickedData, closingHours } =
     useContext(CourtTypeContext);
 
-  useEffect(() => {
-    generateTimeLabels();
-  }, [courts]);
+  // State to track hover position and hovered slotId
+  const [hoverData, setHoverData] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    slotId: null,
+  });
 
-  useEffect(() => {
+  // Function to handle mouse hover
+  const handleMouseEnter = (e, slotcost) => {
+    const { clientX, clientY } = e;
 
-  }, []);
-  const handleGridClick = (court, label) => {
-    if (
-      dayjs(label, "HH:mm").isAfter(dayjs(court.opening_hours, "HH:mm")) ||
-      (dayjs(label, "HH:mm").isSame(dayjs(court.opening_hours, "HH:mm")) &&
-        dayjs(label, "HH:mm").isBefore(dayjs(court.closing_hours, "HH:mm")))
-    ) {
-      const newEntry = {
-        id: court.court_id,
-        name: court.court_name,
-        label,
-        open: court.opening_hours,
-        close: court.closing_hours,
-        deadend: dayjs(label, "HH:mm").add(30, "minute").format("HH:mm"),
-      };
+    setHoverData({
+      show: true,
+      x: clientX,
+      y: clientY,
+      slotcost, // Pass the correct slotId
+    });
+  };
 
-      // Add new entry directly to clickedData
-      setClickedData((prevData) => [...prevData, newEntry]);
-    }
+  // Function to handle mouse leave
+  const handleMouseLeave = () => {
+    setHoverData({
+      show: false,
+      x: 0,
+      y: 0,
+      slotId: null,
+    });
   };
 
   return (
@@ -72,42 +57,57 @@ function NewReservationGrid() {
       {/* Grid for court and time labels */}
       <div className="flex justify-center p-8 ">
         <div className="">
-          {courts.map((court, index) => (
-            <div
-              key={index}
-              className={`flex gap-2 justify-center items-center font-semibold`}
-            >
-              <h2 className="flex text-xs w-20 whitespace-nowrap">
-                {court.court_name}
-              </h2>
+          {courts &&
+            courts.map((court, index) => (
+              <div
+                key={index}
+                className={`flex gap-2 justify-center items-center font-semibold`}
+              >
+                <h2 className="flex text-xs w-20 whitespace-nowrap ">
+                  {court.court_name}
+                </h2>
 
-              <div className="flex">
-                {timeLabels.map((label, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleGridClick(court, label)} // Handle click
-                    className={`border border-gray-400 aspect-square w-10 flex justify-center items-center ${
-                      dayjs(label, "HH:mm").isBefore(
-                        dayjs(court.opening_hours, "HH:mm")
-                      ) ||
-                      dayjs(label, "HH:mm").isAfter(
-                        dayjs(court.closing_hours, "HH:mm")
-                      ) ||
-                      dayjs(label, "HH:mm").isSame(
-                        dayjs(court.closing_hours, "HH:mm")
-                      )
-                        ? "cursor-crosshair bg-gray-300" // Disable cursor and apply styles for disabled state
-                        : "cursor-pointer hover:bg-brandBlue/40 active:bg-brandBlue"
-                    }`}
-                  >
-                    <p className="text-xs">{label}</p>
-                  </div>
-                ))}
+                <div className="flex">
+                  {court.timeLabels &&
+                    court.timeLabels.map((label, idx) => (
+                      <div
+                        key={idx}
+                        onMouseEnter={(e) =>
+                          handleMouseEnter(e, label.slotcost)
+                        }
+                        onMouseLeave={handleMouseLeave}
+                        className={`border border-gray-400 aspect-square w-10 flex justify-center items-center ${
+                          court.status === "available"
+                            ? "bg-green-300"
+                            : court.status === "booked"
+                            ? "bg-yellow-300"
+                            : court.status === "undermaintenance"
+                            ? "bg-red-300"
+                            : "bg-white"
+                        }`}
+                      >
+                        <p className="text-xs">{label.startTime}</p>
+                      </div>
+                    ))}
+                  | {openingHours} || {closingHours}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
+
+      {/* Tooltip div to display slotId when hovering */}
+      {hoverData.show && (
+        <div
+          className="absolute bg-gray-700 text-white text-xs px-2 py-1 rounded"
+          style={{
+            top: `${hoverData.y + 10}px`,
+            left: `${hoverData.x + 10}px`,
+          }}
+        >
+          Slot Cost : {hoverData.slotcost}
+        </div>
+      )}
     </div>
   );
 }

@@ -52,37 +52,36 @@ export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
     const response = await getCourtsByVenueAndCourtType(venueId, courtTypeId);
 
     // Process Courts by Venue and Court Type (updatedResponse1)
-    const updatedResponse = response.CourtsByVenueAndCourtType.map(
-      (court, index) => {
-        const { opening_hours, closing_hours, cost_per_hour, court_id } = court;
+    const updatedResponse = response.CourtsByVenueAndCourtType.map((court) => {
+      const { opening_hours, closing_hours, cost_per_hour, court_id, status } =
+        court;
 
-        // Convert opening and closing hours to Date objects
-        const startTime = new Date(`1970-01-01T${opening_hours}Z`);
-        const endTime = new Date(`1970-01-01T${closing_hours}Z`);
+      // Convert opening and closing hours to Date objects
+      const startTime = new Date(`1970-01-01T${opening_hours}Z`);
+      const endTime = new Date(`1970-01-01T${closing_hours}Z`);
 
-        // Generate time slots with 30-minute intervals
-        const timeLabels = [];
-        let currentSlotId = 1;
-        let currentTime = startTime;
+      // Generate time slots with 30-minute intervals
+      const timeLabels = [];
+      let currentSlotId = 1;
+      let currentTime = startTime;
 
-        while (currentTime < endTime) {
-          const nextTime = new Date(currentTime.getTime() + 30 * 60000); // 30 minutes added
-          timeLabels.push({
-            slotId: currentSlotId++,
-            startTime: currentTime.toISOString().substring(11, 16), // Get only time part HH:MM
-            endTime: nextTime.toISOString().substring(11, 16),
-            slotcost: cost_per_hour, // Initially set to cost_per_hour, can be updated later
-            disableStatus: null,
-          });
-          currentTime = nextTime;
-        }
-
-        return {
-          ...court,
-          timeLabels,
-        };
+      while (currentTime < endTime) {
+        const nextTime = new Date(currentTime.getTime() + 30 * 60000); // 30 minutes added
+        timeLabels.push({
+          slotId: currentSlotId++,
+          startTime: currentTime.toISOString().substring(11, 16), // Get only time part HH:MM
+          endTime: nextTime.toISOString().substring(11, 16),
+          slotcost: cost_per_hour, // Initially set to cost_per_hour, can be updated later
+          disableStatus: status === "available" ? 0 : 1,
+        });
+        currentTime = nextTime;
       }
-    );
+
+      return {
+        ...court,
+        timeLabels,
+      };
+    });
 
     // Process specialCost (updatedResponse2)
     response.specialCost.forEach((specialCost) => {
@@ -99,7 +98,7 @@ export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
 
       // Find the matching court from updatedResponse
       const matchingCourt = updatedResponse.find(
-        (court) => court.court_id == courtcost_courtid
+        (court) => court.court_id === courtcost_courtid
       );
       if (matchingCourt) {
         matchingCourt.timeLabels.forEach((slot) => {
@@ -121,6 +120,30 @@ export const getCourtsByVenueAndCourtTypeController = async (req, res) => {
       }
     });
 
+    // Add venue details to each court in the updatedResponse
+    updatedResponse.forEach((court) => {
+      const matchingVenue = response.venue.find(
+        (venue) => venue.venue_id == venueId // Ensure we are matching by the correct venue ID
+      );
+
+      if (matchingVenue) {
+        const { venue_id, venue_name, status } = matchingVenue;
+        court.venueDetails = {
+          venue_id,
+          venue_name,
+          isVenueDisabled:
+            status == "open"
+              ? false
+              : status == "closed"
+              ? true
+              : status == "under maintenance"
+              ? true
+              : false, // Update based on your status logic
+        };
+      }
+    });
+
+    // Return the updated response with courts
     return updatedResponse;
   } catch (error) {
     console.error("Error occurred in get courts controller: ", error);

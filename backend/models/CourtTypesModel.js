@@ -21,7 +21,7 @@ export const getCourtTypeByTenantId = async (tenantId) => {
 export const getCourtTypeByTenantIdAndVenue = async (tenantId, venueId) => {
   try {
     const [response] = await pool.query(
-      `SELECT courttype.court_type_id, courttype.type_name ,venue.venue_id,venue.venue_name
+      `SELECT courttype.court_type_id, courttype.type_name ,venue.venue_id,venue.venue_name,venue.status
        FROM courttype
        LEFT JOIN venue ON courttype.venue_id = venue.venue_id
        LEFT JOIN tenant ON venue.tenant_id = tenant.tenant_id

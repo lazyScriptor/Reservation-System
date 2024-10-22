@@ -57,9 +57,18 @@ export const getCourtsByVenueAndCourtType = async (venueId, courtTypeId) => {
     `,
     [venueId, courtTypeId]
   );
+  const [response3] = await pool.query(
+    `
+    SELECT *
+    FROM venue
+    WHERE venue_id = ?
+    `,
+    [venueId]
+  );
   return {
     CourtsByVenueAndCourtType: response1,
     specialCost: response2,
+    venue: response3,
   };
   return;
 };

@@ -4,11 +4,11 @@ import axios from "axios";
 
 // Provider component to pass down context value
 export function CourtTypeContextProvider({ children }) {
-  const [courtCreateForm, setCourtCreateForm] = useState(null); // Initialize state
+  const [courtCreateForm, setCourtCreateForm] = useState(null);
   const [venues, setVenues] = useState([]);
   const [courtTypes, setCourtTypes] = useState([]);
-  const [selectedVenueId, setSelectedVenueId] = useState(""); // State to track selected venue
-  const [tenantId, setTenantId] = useState(localStorage.getItem("tenantId")); // State to store tenantId
+  const [selectedVenueId, setSelectedVenueId] = useState("");
+  const [tenantId, setTenantId] = useState(localStorage.getItem("tenantId"));
   const [courts, setCourts] = useState([]);
   const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
@@ -31,7 +31,6 @@ export function CourtTypeContextProvider({ children }) {
   };
   // Fetch courts by venue and court type and calculate the minimum and maximum time
   const handleGetCourts = async (venueId, courtTypeId) => {
-    
     const formattedDate = selectedDate.toISOString().slice(0, 10); // '2024-10-16'
 
     if (venueId && courtTypeId) {
@@ -44,10 +43,10 @@ export function CourtTypeContextProvider({ children }) {
 
         const fetchedCourts = response.data.response;
         console.log(
-          "court types in provider handlegecourts handler",
+          "court types in provider handlecourts handler",
           fetchedCourts
         );
-        
+
         if (response.data.response) {
           setCourts(fetchedCourts);
 
@@ -84,7 +83,7 @@ export function CourtTypeContextProvider({ children }) {
         console.error("Error fetching courts:", error);
       }
     } else {
-      setCourts([]); // Reset courts if no venue or court type is selected
+      setCourts([]);
     }
   };
 
@@ -142,7 +141,6 @@ export function CourtTypeContextProvider({ children }) {
     fetchVenueNames();
   }, [tenantId]);
 
-  // Empty the courts and court types arrays when venues or court types change
   useEffect(() => {
     setCourts([]);
   }, [venues, courtTypes]);
@@ -152,7 +150,6 @@ export function CourtTypeContextProvider({ children }) {
   }, [venues]);
 
   useEffect(() => {
-    // Build the holidayArray from courts
     const newHolidayArray = courts.map((item) => ({
       venueId: item.venue_id,
       courtId: item.court_id,
@@ -163,14 +160,11 @@ export function CourtTypeContextProvider({ children }) {
 
     const getHolidayData = async () => {
       try {
-        // Only send the request if there is data in the courts array
         if (newHolidayArray.length > 0) {
           const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/close/times`, // Change to POST request
-            { holidayArray: newHolidayArray } // Send holidayArray in the body
+            `${import.meta.env.VITE_API_URL}/close/times`,
+            { holidayArray: newHolidayArray }
           );
-
-          // Handle the response (e.g., store the data in a state or process it)
           console.log("Holiday data response:", response.data);
         }
       } catch (error) {
@@ -181,7 +175,7 @@ export function CourtTypeContextProvider({ children }) {
     if (newHolidayArray.length > 0) {
       getHolidayData();
     }
-  }, [selectedDate, courts]); // Only trigger when courts or selectedDate change
+  }, [selectedDate, courts]);
 
   return (
     <CourtTypeContext.Provider
@@ -197,8 +191,8 @@ export function CourtTypeContextProvider({ children }) {
         venues,
         setVenues,
         handleGetCourts,
-        openingHours, // Pass down the calculated opening hours
-        closingHours, // Pass down the calculated closing hours
+        openingHours,
+        closingHours,
         timeDifference,
         clickedData,
         setClickedData,
