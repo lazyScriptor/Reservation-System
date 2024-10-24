@@ -15,7 +15,7 @@ function Reservation() {
 
   return (
     <CourtTypeContextProvider>
-      <div className="bg-gray-200 text-gray-700 h-[100vh]">
+      <div className="bg-gray-50 text-gray-700 h-[100vh]">
         <VenueCourtAndCourtType />
         <ShiftDateCalendar />
         {/* <ReservationGrid /> */}

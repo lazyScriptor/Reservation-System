@@ -24,8 +24,9 @@ export default function ShiftDateCalendar() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="container py-12">
+      <div className="container py-12 ">
         <DatePicker
+        className=" bg-white  border-gray-100 border-2 hover:border-brandBlue justify-start shadow-brandBlue rounded-xl shadow-sm hover:shadow-lg active:shadow-xl  transition-all duration-700 "
           value={dayjs(selectedDate)} // Use dayjs to format the selected date
           format="DD-MMMM-YYYY" // Display full month name
           renderInput={(params) => <TextField {...params} />}

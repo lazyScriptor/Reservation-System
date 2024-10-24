@@ -27,7 +27,7 @@ function VenueCourtAndCourtType() {
     <div>
       <div className="container">
         <div className="flex items-center gap-8">
-          <div>
+          <div className="">
             {/* Venue buttons */}
             <div className="bg-white flex gap-2 p-1">
               {venues.map((venue, index) => (
@@ -72,7 +72,7 @@ function VenueCourtAndCourtType() {
           </div>
 
           {/* Refresh button */}
-          <div>
+          {/* <div>
             <button
               className="text-lg"
               onClick={() => {
@@ -82,7 +82,7 @@ function VenueCourtAndCourtType() {
             >
               <IoIosRefresh />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

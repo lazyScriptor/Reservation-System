@@ -34,6 +34,6 @@ app.use("/court", courtsRoute);
 app.use("/court-types", courtTypesRoute);
 app.use("/close", holidayAndClosing);
 
-app.listen(3006, "192.168.10.75", () => {
-  console.log("Server starts on port 3006");
+app.listen(3005, "192.168.10.75", () => {
+  console.log("Server starts on port 3005");
 });

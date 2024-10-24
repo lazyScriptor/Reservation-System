@@ -4,13 +4,10 @@ import { CourtTypeContext } from "../../../contexts/Contexts";
 function NewReservationGrid() {
   const {
     courts,
-    openingHours,
     clickedData,
     setClickedData,
     selectedDate,
-    closingHours,
     holidayArray,
-    setHolidayArray,
   } = useContext(CourtTypeContext);
 
   // State to track hover position and hovered slotId
@@ -114,11 +111,11 @@ function NewReservationGrid() {
   }, [holidayArray, selectedDate]);
 
   return (
-    <div>
+    <div className="container">
       {/* Display all clicked data */}
-      <div className="flex p-4">
+      <div className="flex py-4 ">
         {clickedData.map((item, index) => (
-          <div key={index} className="border p-2 mb-2">
+          <div key={index} className="border py-2 mb-2">
             <p>
               <strong>Court Name:</strong> {item.name}
             </p>
@@ -133,19 +130,21 @@ function NewReservationGrid() {
       </div>
 
       {/* Grid for court and time labels */}
-      <div className="flex justify-center p-8">
-        <div>
+      <div className="flex justify-center py-8">
+        <div className="flex flex-col gap-2 w-full max-w-full ">
           {courts &&
             courts.map((court, index) => (
               <div
                 key={index}
-                className={`flex gap-2 justify-center items-center font-semibold border-2 border-gray-300 p-4`}
+                className="flex gap-2 items-center justify-center  font-semibold p-4 bg-white border-gray-100 border-2 hover:border-brandBlue shadow-brandBlue rounded-xl shadow-sm hover:shadow-lg active:shadow-xl  transition-all duration-700"
               >
-                <h2 className="flex text-xs w-20 whitespace-nowrap ">
+                {/* Fixed Court Name with Minimum Width */}
+                <h2 className="flex text-xs w-20 min-w-[100px] whitespace-nowrap">
                   {court.court_name}
                 </h2>
 
-                <div className="flex ">
+                {/* Scrollable Time Slot Grid */}
+                <div className="flex overflow-x-auto w-full">
                   {court.timeLabels &&
                     court.timeLabels.map((label, idx) => {
                       const isHoliday = isHolidayTimeLabel(

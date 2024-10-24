@@ -13,7 +13,7 @@ export default function CategoryTypeButton({
     <button
       disabled={disableStatus}
       onClick={handleClick} // Use the handleClick prop directly
-      className={`bg-${color} flex flex-col items-start p-4 gap-2 border-gray-100 border-2 hover:border-${hoverTextColor} justify-start shadow-${hoverTextColor} rounded-xl shadow-md hover:shadow-lg active:shadow-xl  transition-all duration-700  `}
+      className={`bg-${color} flex flex-col items-start p-4 gap-2 border-gray-100 border-2 hover:border-${hoverTextColor} justify-start shadow-${hoverTextColor} rounded-xl shadow-sm hover:shadow-lg transition-all duration-700  `}
     >
       <p
         className={`transition-all text-start duration-700  hover:text-${hoverTextColor} text-gray-500 font-bold `}
