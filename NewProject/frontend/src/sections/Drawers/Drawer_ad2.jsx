@@ -16,27 +16,40 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { PiCourtBasketballThin } from "react-icons/pi";
+import { RxDashboard } from "react-icons/rx";
+import { IoCreateOutline } from "react-icons/io5";
+import { CiSquareChevUp, CiSquareChevDown } from "react-icons/ci";
+import { CiInboxIn } from "react-icons/ci";
+import { PiMailboxThin } from "react-icons/pi";
 
 const drawerWidth = 240;
+
 const BUTTONARRAY = [
   {
     id: 1,
     name: "Dashboard",
     navigation: "/dashboard-admin",
+    icon: <RxDashboard />,
   },
   {
     id: 2,
     name: "Courts",
     navigation: "/courts-admin",
+    icon: <PiCourtBasketballThin />,
     children: [
-      { id: 1, name: "Create Court", navigation: "/create-courts-admin" },
+      {
+        id: 1,
+        name: "Create Court",
+        navigation: "/create-courts-admin",
+        icon: <IoCreateOutline />,
+      },
     ],
   },
 ];
+
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -63,7 +76,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
@@ -75,19 +87,6 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(["width", "margin"], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-      },
-    },
-  ],
 }));
 
 const Drawer = styled(MuiDrawer, {
@@ -139,12 +138,7 @@ export default function MiniDrawer({ children, number, subNumber }) {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: "none" },
-            ]}
+            sx={[{ marginRight: 5 }, open && { display: "none" }]}
           >
             <MenuIcon />
           </IconButton>
@@ -165,20 +159,21 @@ export default function MiniDrawer({ children, number, subNumber }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {BUTTONARRAY.map((item, index) => (
-            <>
+          {BUTTONARRAY.map((item) => (
+            <React.Fragment key={item.id}>
               <ListItem
-                key={item.id}
                 disablePadding
                 sx={{
                   backgroundColor:
-                    item.id == number ? "#00aaff50" : "transparent",
+                    item.id === number ? "#00aaff50" : "transparent",
                 }}
               >
                 <ListItemButton
                   onClick={() => {
                     navigate(item.navigation);
-                    setSubButtontState(!subButtonState);
+                    {
+                      item.children && setSubButtontState(!subButtonState);
+                    }
                   }}
                   sx={{
                     justifyContent: open ? "initial" : "center",
@@ -190,24 +185,25 @@ export default function MiniDrawer({ children, number, subNumber }) {
                       minWidth: 0,
                       mr: open ? 3 : "auto",
                       justifyContent: "center",
-                      color: item.id == number ? "#00aaffff" : "",
+                      color: item.id === number ? "#00aaffff" : "",
                     }}
                   >
-                    {index % 2 === 0 ? <MailIcon /> : <MailIcon />}
+                    {item.icon}
                   </ListItemIcon>
                   {open && (
                     <>
                       <ListItemText
                         primary={item.name}
                         sx={{
-                          color: item.id == number ? "#00aaffff" : "",
+                          color: item.id === number ? "#00aaffff" : "",
                         }}
                       />
-                      {item.children && subButtonState ? (
-                        <Button>^</Button>
-                      ) : (
-                        <Button>*</Button>
-                      )}
+                      {item.children &&
+                        (subButtonState ? (
+                          <CiSquareChevUp />
+                        ) : (
+                          <CiSquareChevDown />
+                        ))}
                     </>
                   )}
                 </ListItemButton>
@@ -216,15 +212,16 @@ export default function MiniDrawer({ children, number, subNumber }) {
               {open &&
                 item.children &&
                 subButtonState &&
-                item.children.map((item, index) => (
+                item.children.map((child) => (
                   <ListItem
+                    key={child.id}
                     sx={{
                       backgroundColor:
-                        item.id == subNumber ? "#00aaff25" : "transparent",
+                        child.id === subNumber ? "#00aaff25" : "transparent",
                     }}
                   >
                     <ListItemButton
-                      onClick={() => navigate(item.navigation)}
+                      onClick={() => navigate(child.navigation)}
                       sx={{
                         justifyContent: open ? "initial" : "center",
                         px: 2.5,
@@ -235,21 +232,21 @@ export default function MiniDrawer({ children, number, subNumber }) {
                           minWidth: 0,
                           mr: open ? 3 : "auto",
                           justifyContent: "center",
-                          color: item.id == number ? "#00aaffff" : "",
+                          color: child.id === subNumber ? "#00aaffff" : "",
                         }}
                       >
-                        {index % 2 === 0 ? <MailIcon /> : <MailIcon />}
+                        {child.icon}
                       </ListItemIcon>
                       <ListItemText
-                        primary={item.name}
+                        primary={child.name}
                         sx={{
-                          color: item.id == number ? "#00aaffff" : "",
+                          color: child.id === subNumber ? "#00aaffff" : "",
                         }}
                       />
                     </ListItemButton>
                   </ListItem>
                 ))}
-            </>
+            </React.Fragment>
           ))}
         </List>
         <Divider />
@@ -258,47 +255,23 @@ export default function MiniDrawer({ children, number, subNumber }) {
             <ListItem key={item} disablePadding sx={{ display: "block" }}>
               <ListItemButton
                 sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
+                  { minHeight: 48, px: 2.5 },
                   open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
+                    ? { justifyContent: "initial" }
+                    : { justifyContent: "center" },
                 ]}
               >
                 <ListItemIcon
                   sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: "center",
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: "auto",
-                        },
+                    { minWidth: 0, justifyContent: "center" },
+                    open ? { mr: 3 } : { mr: "auto" },
                   ]}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {index % 2 === 0 ? <PiMailboxThin /> : <CiInboxIn />}
                 </ListItemIcon>
                 <ListItemText
                   primary={item}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
+                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
                 />
               </ListItemButton>
             </ListItem>

@@ -6,37 +6,71 @@ import {
   getBrandNames,
   getUserCredentials,
 } from "../models/UserModel.js";
+
 const saltRounds = 10;
-const myPlaintextPassword = "s0//P4$$w0rD";
-const someOtherPlaintextPassword = "not_bacon";
+const JWT_SECRET_KEY = "codensolutions";
+const jwtSecret = new TextEncoder().encode(JWT_SECRET_KEY);
+const REFRESH_TOKEN_SECRET = "your_refresh_token_secret"; // Keep this secret safe!
+
+// Function to generate JWT tokens
+const generateTokens = (userData) => {
+  const accessToken = jwt.sign({ data: userData }, "cricket", {
+    expiresIn: "15m",
+  });
+  const refreshToken = jwt.sign({ data: userData }, REFRESH_TOKEN_SECRET, {
+    expiresIn: "7d",
+  });
+  return { accessToken, refreshToken };
+};
+
+// Middleware to check refresh token
+export const checkRefreshToken = async (req, res) => {
+  const { cookies } = req;
+  const refreshToken = cookies.refreshToken;
+  console.log("This is the cookie, : ", refreshToken);
+
+  if (!refreshToken) {
+    return res.status(401).json({ message: "No refresh token provided" });
+  }
+
+  try { 
+    const userData = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET);
+    const accessToken = jwt.sign({ data: userData.data }, "cricket", {
+      expiresIn: "15m",
+    });
+    return res.json({ accessToken });
+  } catch (error) {
+    return res.status(403).json({ message: "Invalid refresh token" });
+  }
+};
 
 export const authorizeCheck = async (req, res) => {
   try {
     const { email, password } = req.body;
     const response = await getUserCredentials(email);
-    // bcrypt.hash("123", saltRounds, function (err, hash) {
-    //   console.log(hash);
-    // });
     const userData = response[0];
+
     if (userData) {
       if (bcrypt.compareSync(password, userData.password)) {
-        const token = jwt.sign(
-          {
-            data: userData,
-          },
-          "cricket",
-          { expiresIn: 60 * 60 }
-        );
+        const { accessToken, refreshToken } = generateTokens(userData);
+
+        // Store refresh token in an HTTP-only cookie
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Set to true in production
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         return res.json({
           authorizationStatus: true,
-          token,
+          accessToken,
           message: "Authorization successful",
           userFoundStatus: true,
         });
       } else {
         return res.json({
           authorizationStatus: false,
-          token: false,
           message: "User found but Authorization failed",
           userFoundStatus: true,
         });
@@ -44,15 +78,18 @@ export const authorizeCheck = async (req, res) => {
     } else {
       return res.json({
         authorizationStatus: false,
-        token: false,
-        message: "User not found & Authorization failed ",
+        message: "User not found & Authorization failed",
         userFoundStatus: false,
       });
     }
   } catch (error) {
-    throw error;
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// Add other controller methods like getBrandNamesController and addTenantController...
+
 export const getBrandNamesController = async (req, res) => {
   try {
     const response = await getBrandNames();

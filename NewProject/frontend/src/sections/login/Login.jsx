@@ -6,7 +6,7 @@ import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google"; // Impor
 import logo from "../../assets/logo.png";
 import loginbackground from "../../assets/loginbackground.png";
 import loginmainimage from "../../assets/loginmainimage.png";
-import InputFieldCustomized from "../../ReUsableComponents/InputFieldCustomized";
+import InputFieldCustomized from "../../components/InputFieldCustomized";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +69,7 @@ export default function Login() {
           "userName",
           `${decodedToken.data.first_name} ${decodedToken.data.last_name}`
         );
-        localStorage.setItem("googleObject",'')
+        localStorage.setItem("googleObject", "");
         if (decodedToken.data.user_type === "client") navigate("/dashboard-c");
         else if (decodedToken.data.user_type === "basicuser")
           navigate("/dashboard-bu");
@@ -96,7 +96,7 @@ export default function Login() {
     const googleObj = {
       googleName: decodedToken.name,
       googleImg: decodedToken.picture,
-      googleEmail:decodedToken.email
+      googleEmail: decodedToken.email,
     };
     localStorage.setItem("googleObject", JSON.stringify(googleObj));
     navigate("/dashboard-bu"); // Navigate to client dashboard as an example
