@@ -9,50 +9,73 @@ import {
 const saltRounds = 10;
 const myPlaintextPassword = "s0//P4$$w0rD";
 const someOtherPlaintextPassword = "not_bacon";
+const JWT_SECRET = process.env.JWT_SECRET || "cricket"; // Use environment variable
+
+export const verifyJwt = (req, res, next) => {
+  const token = req.headers["x-access-token"];
+  if (!token) {
+    return res.json({ auth: false, message: "You don't have a valid token" });
+  } else {
+    jwt.verify(token, JWT_SECRET, (error, decoded) => {
+      if (error) {
+        return res
+        
+          .json({ auth: false, message: "You failed to authenticate" });
+      } else {
+        req.user = decoded.data;
+        next();
+      }
+    });
+  }
+};
 
 export const authorizeCheck = async (req, res) => {
   try {
     const { email, password } = req.body;
     const response = await getUserCredentials(email);
-    // bcrypt.hash("123", saltRounds, function (err, hash) {
-    //   console.log(hash);
-    // });
     const userData = response[0];
+
     if (userData) {
       if (bcrypt.compareSync(password, userData.password)) {
         const token = jwt.sign(
-          {
-            data: userData,
-          },
-          "cricket",
-          { expiresIn: 60 * 60 }
+          { data: userData },
+          JWT_SECRET,
+          { expiresIn: "1h" } // Use a string for duration
         );
+
+        // Set the token in an HTTP-only cookie
+        res.cookie("accessToken", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+          sameSite: "Strict",
+          maxAge: 3600000, // 1 hour
+        });
+
         return res.json({
           authorizationStatus: true,
-          token,
           message: "Authorization successful",
           userFoundStatus: true,
         });
       } else {
-        return res.json({
+        return res.status(401).json({
           authorizationStatus: false,
-          token: false,
           message: "User found but Authorization failed",
           userFoundStatus: true,
         });
       }
     } else {
-      return res.json({
+      return res.status(404).json({
         authorizationStatus: false,
-        token: false,
         message: "User not found & Authorization failed ",
         userFoundStatus: false,
       });
     }
   } catch (error) {
-    throw error;
+    console.error("Error during authorization:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 export const getBrandNamesController = async (req, res) => {
   try {
     const response = await getBrandNames();

@@ -48,6 +48,12 @@ const BUTTONARRAY = [
       },
     ],
   },
+  {
+    id: 3,
+    name: "Logout",
+    navigation: "/",
+    icon: <RxDashboard />,
+  },
 ];
 
 const openedMixin = (theme) => ({

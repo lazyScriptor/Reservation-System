@@ -1,97 +1,37 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../Contexts";
+import React, { useEffect, useState } from "react";
 
-// Create an AuthContext to provide the authentication state and methods
-const AuthContext = createContext();
-
-// Custom hook to access the AuthContext
-export const useAuth = () => {
-  const authContext = useContext(AuthContext);
-  if (!authContext) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return authContext;
-};
-
-const AuthenticationProvider = ({ children }) => {
-  const [token, setToken] = useState(null); // Access token
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Authentication state
-  const [loading, setLoading] = useState(true); // Loading state
-
-  // Fetch access token securely
+function AuthenticationProvider({ children }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const token = localStorage.getItem("accessToken");
   useEffect(() => {
-    const fetchAccessToken = async () => {
+    const fetchAuthStatus = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/authorize-check/access-token`,
-          { withCredentials: true }
+          `${import.meta.env.VITE_API_URL}/user/isUserAuth`,
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("accessToken"), // or however you set it
+            },
+          }
         );
-        console.log("Access Token Response: ", response); // Log the response
-        setToken(response.data.accessToken);
-        console.log(response.data.accessToke);
-        setIsAuthenticated(true);
+        console.log(response.data);
+        setIsAuthenticated(response.data.auth); // Adjust according to your API response
       } catch (error) {
-        console.error("Error fetching access token: ", error);
-        setToken(null);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
+        console.error("Error fetching authentication status:", error);
+        setIsAuthenticated(false); // Default to false on error
       }
     };
 
-    fetchAccessToken();
-  }, []);
-
-  // Attach the access token to axios headers if it exists
-  useEffect(() => {
-    const authInterceptor = axios.interceptors.request.use(
-      (config) => {
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    return () => {
-      axios.interceptors.request.eject(authInterceptor); // Clean up the interceptor
-    };
+    fetchAuthStatus();
   }, [token]);
 
-  // Automatically refresh token when expired
-  axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        try {
-          // Get a new access token using the refresh token
-          const { data } = await axios.get(
-            `${import.meta.env.VITE_API_URL}/user/authorize-check/refresh-token`,
-            { withCredentials: true }
-          );
-          setToken(data.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-          return axios(originalRequest); // Retry the original request with the new token
-        } catch (refreshError) {
-          setIsAuthenticated(false); // Logout if refresh fails
-          setToken(null);
-          return Promise.reject(refreshError);
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
-
-  // Render the provider with the authentication state
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token }}>
-      {!loading && children}{" "}
-      {/* Only render children when loading is complete */}
+    <AuthContext.Provider value={{ isAuthenticated }}>
+      {children}
     </AuthContext.Provider>
   );
-};
+}
 
 export default AuthenticationProvider;

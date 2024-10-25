@@ -69,10 +69,10 @@ export default function Login() {
           "userName",
           `${decodedToken.data.first_name} ${decodedToken.data.last_name}`
         );
-        localStorage.setItem("googleObject",'')
+        localStorage.setItem("googleObject", "");
         if (decodedToken.data.user_type === "client") navigate("/dashboard-c");
         else if (decodedToken.data.user_type === "basicuser")
-          navigate("/dashboard-bu");
+          navigate("/dashboard-admin");
         else if (decodedToken.data.user_type === "admin")
           navigate("/dashboard-a");
       } else {
@@ -96,7 +96,7 @@ export default function Login() {
     const googleObj = {
       googleName: decodedToken.name,
       googleImg: decodedToken.picture,
-      googleEmail:decodedToken.email
+      googleEmail: decodedToken.email,
     };
     localStorage.setItem("googleObject", JSON.stringify(googleObj));
     navigate("/dashboard-bu"); // Navigate to client dashboard as an example

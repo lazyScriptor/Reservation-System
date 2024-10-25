@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import axios from "axios"; // Import Axios
+import { useNavigate } from "react-router-dom";
 
 // Validation Schema
 const schema = Yup.object().shape({
@@ -16,6 +17,7 @@ const schema = Yup.object().shape({
 });
 
 export default function LoginForm() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -28,13 +30,18 @@ export default function LoginForm() {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/authorize-check`,
-        data
+        data,
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("accessToken"), // or however you set it
+          },
+          withCredentials: true, // Important: This allows cookies to be sent and received
+        }
       );
-      
+  
       if (response.data.authorizationStatus) {
-        const token = response.data.token;
-        localStorage.setItem("accessToken", token);
-        console.log("Login successful! Token stored.");
+        navigate("/dashboard-admin");
+        console.log("Login successful!", response.data);
       } else {
         console.error(response.data.message);
       }

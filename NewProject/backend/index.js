@@ -5,26 +5,23 @@ import courtsRoute from "./routes/Courts.js";
 import courtTypesRoute from "./routes/CourtTypes.js";
 import holidayAndClosing from "./routes/HolidayANDClosing.js";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
 const app = express();
+
+app.use(cookieParser());
 app.use(express.json());
 
 // Define allowed origins
 const allowedOrigins = [
   "http://192.168.10.75:5173", // Replace with your personal laptop's IP
+  "http://localhost:5173", // Local development
 ];
 
 // Use CORS with the allowed origins
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    credentials: true,
+    origin: allowedOrigins,
   })
 );
 
