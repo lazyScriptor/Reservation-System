@@ -6,10 +6,11 @@ import {
   getBrandNames,
   getUserCredentials,
 } from "../models/UserModel.js";
-const saltRounds = 10;
-const myPlaintextPassword = "s0//P4$$w0rD";
-const someOtherPlaintextPassword = "not_bacon";
+const isProduction = process.env.NODE_ENV === "production";
+
+const saltRounds = 10; // Not used in this code but should be used when hashing passwords
 const JWT_SECRET = process.env.JWT_SECRET || "cricket"; // Use environment variable
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "baseballSecret"; // Use environment variable
 
 export const verifyJwt = (req, res, next) => {
   const token = req.headers["x-access-token"];
@@ -18,15 +19,17 @@ export const verifyJwt = (req, res, next) => {
   } else {
     jwt.verify(token, JWT_SECRET, (error, decoded) => {
       if (error) {
-        return res
-        
-          .json({ auth: false, message: "You failed to authenticate" });
+        return res.json({ auth: false, message: "You failed to authenticate" });
       } else {
-        req.user = decoded.data;
+        req.user = decoded.data; // Make sure this matches your token payload
         next();
       }
     });
   }
+};
+
+const generateToken = (user, secret, expiresIn) => {
+  return jwt.sign({ data: user }, secret, { expiresIn });
 };
 
 export const authorizeCheck = async (req, res) => {
@@ -36,22 +39,31 @@ export const authorizeCheck = async (req, res) => {
     const userData = response[0];
 
     if (userData) {
-      if (bcrypt.compareSync(password, userData.password)) {
-        const token = jwt.sign(
-          { data: userData },
+      // Compare password
+      const passwordMatch = bcrypt.compareSync(password, userData.password);
+      if (passwordMatch) {
+        // Generate tokens
+        const accessToken = generateToken(
+          userData,
           JWT_SECRET,
-          { expiresIn: "1h" } // Use a string for duration
+          process.env.JWT_EXPIRATION // Ensure this is defined
+        );
+        const refreshToken = generateToken(
+          userData,
+          JWT_REFRESH_SECRET,
+          process.env.JWT_REFRESH_EXPIRATION
         );
 
-        // Set the token in an HTTP-only cookie
-        res.cookie("accessToken", token, {
+        res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-          sameSite: "Strict",
-          maxAge: 3600000, // 1 hour
+          secure: false,
+          sameSite: "Lax",
+          path: "/", // Ensure the cookie is available on all routes
+          maxAge: 7 * 24 * 60 * 60 * 1000, // Set expiration (e.g., 1 week)
         });
 
         return res.json({
+          accessToken,
           authorizationStatus: true,
           message: "Authorization successful",
           userFoundStatus: true,
@@ -74,6 +86,22 @@ export const authorizeCheck = async (req, res) => {
     console.error("Error during authorization:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
+};
+
+export const refreshToken = (req, res) => {
+  const { refreshToken } = req.cookies;
+  console.log(refreshToken);
+  if (!refreshToken) return res.sendStatus(403);
+
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    const newAccessToken = generateToken(
+      user,
+      process.env.JWT_SECRET,
+      process.env.JWT_EXPIRATION
+    );
+    res.json({ accessToken: newAccessToken });
+  });
 };
 
 export const getBrandNamesController = async (req, res) => {

@@ -1,34 +1,30 @@
 import axios from "axios";
 import { AuthContext } from "../Contexts";
 import React, { useEffect, useState } from "react";
+import { refreshToken } from "../../../services/authService.js";
+import { useNavigate } from "react-router-dom";
 
 function AuthenticationProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const token = localStorage.getItem("accessToken");
-  useEffect(() => {
-    const fetchAuthStatus = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/isUserAuth`,
-          {
-            headers: {
-              "x-access-token": localStorage.getItem("accessToken"), // or however you set it
-            },
-          }
-        );
-        console.log(response.data);
-        setIsAuthenticated(response.data.auth); // Adjust according to your API response
-      } catch (error) {
-        console.error("Error fetching authentication status:", error);
-        setIsAuthenticated(false); // Default to false on error
-      }
-    };
+  const navigate = useNavigate();
 
-    fetchAuthStatus();
-  }, [token]);
+  // useEffect(() => {
+  //   const verifyToken = async () => {
+  //     try {
+  //       console.log("first");
+  //       const response = await refreshToken(); // Ensure token is refreshed if expired
+  //       console.log(response);
+  //     } catch {
+  //       // navigate("/");
+
+  //     }
+  //   };
+  //   verifyToken();
+  // }, [navigate]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated }}>
+    <AuthContext.Provider value={{ isAuthenticated: true }}>
       {children}
     </AuthContext.Provider>
   );

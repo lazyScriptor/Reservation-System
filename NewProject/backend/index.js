@@ -11,7 +11,6 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-// Define allowed origins
 const allowedOrigins = [
   "http://192.168.10.75:5173", // Replace with your personal laptop's IP
   "http://localhost:5173", // Local development

@@ -31,16 +31,12 @@ export default function LoginForm() {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/authorize-check`,
         data,
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("accessToken"), // or however you set it
-          },
-          withCredentials: true, // Important: This allows cookies to be sent and received
-        }
+        { withCredentials: true }
       );
-  
       if (response.data.authorizationStatus) {
         navigate("/dashboard-admin");
+        localStorage.setItem("accessToken", response.data.accessToken);
+
         console.log("Login successful!", response.data);
       } else {
         console.error(response.data.message);
@@ -49,7 +45,6 @@ export default function LoginForm() {
       console.error("Error during login:", error);
     }
   };
-  
 
   return (
     <Box
