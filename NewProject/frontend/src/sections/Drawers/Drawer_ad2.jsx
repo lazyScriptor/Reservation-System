@@ -121,12 +121,14 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({ children, number, subNumber }) {
+  React.useEffect(() => {
+    console.log("drawer");
+  }, []);
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [subButtonState, setSubButtontState] = React.useState(false);
   const navigate = useNavigate();
 
-  
   const handleDrawerOpen = () => {
     setOpen(true);
   };

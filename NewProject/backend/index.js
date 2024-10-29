@@ -1,9 +1,9 @@
-import express from "express";
 import userRoute from "./routes/User.js";
 import venueRoute from "./routes/Venue.js";
 import courtsRoute from "./routes/Courts.js";
 import courtTypesRoute from "./routes/CourtTypes.js";
 import holidayAndClosing from "./routes/HolidayANDClosing.js";
+import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
@@ -19,8 +19,8 @@ const allowedOrigins = [
 // Use CORS with the allowed origins
 app.use(
   cors({
-    credentials: true,
     origin: allowedOrigins,
+    credentials: true,
   })
 );
 
@@ -30,6 +30,6 @@ app.use("/court", courtsRoute);
 app.use("/court-types", courtTypesRoute);
 app.use("/close", holidayAndClosing);
 
-app.listen(3005, "192.168.10.75", () => {
+app.listen(3005, "localhost", () => {
   console.log("Server starts on port 3005");
 });

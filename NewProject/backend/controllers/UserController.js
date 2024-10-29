@@ -13,16 +13,22 @@ const JWT_SECRET = process.env.JWT_SECRET || "cricket"; // Use environment varia
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "baseballSecret"; // Use environment variable
 
 export const verifyJwt = (req, res, next) => {
-  const token = req.headers["x-access-token"];
+  const authHeader = req.headers["authorization"];
+
+  const token = authHeader && authHeader.split(" ")[1]; // 'Bearer <token>'
+
   if (!token) {
     return res.json({ auth: false, message: "You don't have a valid token" });
   } else {
     jwt.verify(token, JWT_SECRET, (error, decoded) => {
       if (error) {
+       
         return res.json({ auth: false, message: "You failed to authenticate" });
       } else {
-        req.user = decoded.data; // Make sure this matches your token payload
-        next();
+        // const userData = decoded;
+
+        // req = userData; // Make sure this matches your token payload
+        return res.json({ auth: true, message: "You have a valid token" });
       }
     });
   }
@@ -56,10 +62,9 @@ export const authorizeCheck = async (req, res) => {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: false,
-          sameSite: "Lax",
-          path: "/", // Ensure the cookie is available on all routes
-          maxAge: 7 * 24 * 60 * 60 * 1000, // Set expiration (e.g., 1 week)
+          secure: process.env.NODE_ENV == "production",
+          path: "/",
+          maxAge: 604800000, // 7 days in milliseconds
         });
 
         return res.json({
@@ -90,7 +95,7 @@ export const authorizeCheck = async (req, res) => {
 
 export const refreshToken = (req, res) => {
   const { refreshToken } = req.cookies;
-  console.log(refreshToken);
+
   if (!refreshToken) return res.sendStatus(403);
 
   jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
