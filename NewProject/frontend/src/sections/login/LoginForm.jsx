@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,6 +17,9 @@ const schema = Yup.object().shape({
 });
 
 export default function LoginForm() {
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
+  }, []);
   const navigate = useNavigate();
   const {
     register,

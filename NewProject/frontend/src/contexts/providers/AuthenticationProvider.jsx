@@ -14,14 +14,14 @@ function AuthenticationProvider({ children }) {
 
     const verifyAuth = async () => {
       try {
-        console.log("first")
         if (!token) {
           console.log("No token found, refreshing...");
           const response = await refreshToken();
+          console.log(response);
           if (response.data.accessToken) {
             localStorage.setItem("accessToken", response.data.accessToken);
             setIsAuthenticated(true);
-            navigate(location.state?.from || "/");
+            navigate(location.state?.from);
           }
         } else {
           const response = await verifyToken(token);
@@ -30,12 +30,13 @@ function AuthenticationProvider({ children }) {
             setIsAuthenticated(true);
           } else {
             console.log(response.data.message);
+            localStorage.removeItem("accessToken");
             navigate("/"); // Redirect if not authenticated
           }
         }
       } catch (error) {
         console.error("Error during authentication:", error);
-        // navigate("/"); // Redirect on error
+        navigate("/"); // Redirect on error
       }
     };
 

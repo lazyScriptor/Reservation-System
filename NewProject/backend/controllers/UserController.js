@@ -22,7 +22,6 @@ export const verifyJwt = (req, res, next) => {
   } else {
     jwt.verify(token, JWT_SECRET, (error, decoded) => {
       if (error) {
-       
         return res.json({ auth: false, message: "You failed to authenticate" });
       } else {
         // const userData = decoded;
