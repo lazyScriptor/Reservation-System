@@ -24,7 +24,8 @@ import { IoCreateOutline } from "react-icons/io5";
 import { CiSquareChevUp, CiSquareChevDown } from "react-icons/ci";
 import { CiInboxIn } from "react-icons/ci";
 import { PiMailboxThin } from "react-icons/pi";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import { RiReservedLine } from "react-icons/ri";
 const drawerWidth = 240;
 
 const BUTTONARRAY = [
@@ -36,28 +37,40 @@ const BUTTONARRAY = [
   },
   {
     id: 2,
-    name: "Courts",
+    name: "Create places",
     navigation: "/courts-admin",
     icon: <PiCourtBasketballThin />,
     children: [
       {
         id: 1,
-        name: "Create Court",
-        navigation: "/create-court-admin",
+        name: "Create Venue",
+        navigation: "/create-venue-admin",
         icon: <IoCreateOutline />,
       },
       {
         id: 2,
-        name: "Create Venue",
-        navigation: "/create-venue-admin",
+        name: "Create Court Type",
+        navigation: "/create-court-type-admin",
+        icon: <IoCreateOutline />,
+      },
+      {
+        id: 3,
+        name: "Create Court",
+        navigation: "/create-court-admin",
         icon: <IoCreateOutline />,
       },
     ],
   },
   {
+    id: 4,
+    name: "Reservations",
+    navigation: "/reservation-admin",
+    icon: <RiReservedLine />,
+  },
+  {
     id: 3,
     name: "Logout",
-    navigation: "/",
+    navigation: "/reservation-admin",
     icon: <RxDashboard />,
   },
 ];
@@ -189,8 +202,7 @@ export default function MiniDrawer({ children, number, subNumber }) {
               <ListItem
                 disablePadding
                 sx={{
-                  backgroundColor:
-                    item.id === number ? "#00aaff50" : "transparent",
+                  p: 1,
                 }}
               >
                 <ListItemButton
@@ -201,8 +213,11 @@ export default function MiniDrawer({ children, number, subNumber }) {
                     }
                   }}
                   sx={{
+                    backgroundColor:
+                      item.id === number ? "#00aaff50" : "transparent",
                     justifyContent: open ? "initial" : "center",
                     px: 2.5,
+                    borderRadius: 2,
                   }}
                 >
                   <ListItemIcon
@@ -241,15 +256,18 @@ export default function MiniDrawer({ children, number, subNumber }) {
                   <ListItem
                     key={child.id}
                     sx={{
-                      backgroundColor:
-                        child.id === subNumber ? "#00aaff25" : "transparent",
+                      p: 1,
                     }}
                   >
                     <ListItemButton
                       onClick={() => navigate(child.navigation)}
                       sx={{
                         justifyContent: open ? "initial" : "center",
-                        px: 2.5,
+                        
+                        backgroundColor:
+                          child.id === subNumber ? "#00aaff50" : "transparent",
+                        borderRadius: 2,
+                        ml:3
                       }}
                     >
                       <ListItemIcon

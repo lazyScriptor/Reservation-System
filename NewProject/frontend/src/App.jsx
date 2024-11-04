@@ -2,7 +2,9 @@ import React, { useState, Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Drawer_ad2 from "./sections/Drawers/Drawer_ad2";
 import AuthenticationProvider from "./contexts/providers/AuthenticationProvider";
-
+import CreateVenueBase from "./sections/create/rolebased/admin/CreateVenueBase";
+import CreateCourtBase from "./sections/create/rolebased/admin/CreateCourtBase";
+import CreateCourtTypeBase from "./sections/create/rolebased/admin/CreateCourtTypeBase";
 const LoginForm = lazy(() => import("./sections/login/LoginForm"));
 const Dashboard = lazy(() => import("./sections/dashboard/Dashboard"));
 const CustomSidebar = lazy(() => import("./sections/Drawers/CustomSidebar"));
@@ -36,18 +38,35 @@ function App() {
             }
           />
           <Route
-            path="/create-court-admin"
+            path="/create-venue-admin"
             element={
               <Drawer_ad2 number={2} subNumber={1}>
-                <p>Create Court</p>
+                <CreateVenueBase />
               </Drawer_ad2>
             }
           />
-           <Route
-            path="/create-venue-admin"
+          <Route
+            path="/create-court-type-admin"
             element={
               <Drawer_ad2 number={2} subNumber={2}>
-                <p>Create Court</p>
+                <CreateCourtTypeBase />
+              </Drawer_ad2>
+            }
+          />
+          <Route
+            path="/create-court-admin"
+            element={
+              <Drawer_ad2 number={2} subNumber={3}>
+                <CreateCourtBase />
+              </Drawer_ad2>
+            }
+          />
+
+          <Route
+            path="/reservation-admin"
+            element={
+              <Drawer_ad2 number={4}>
+                <p>Reservation admin</p>
               </Drawer_ad2>
             }
           />
@@ -59,7 +78,6 @@ function App() {
 }
 
 export default App;
-
 
 const ProtectedAdminRoutes = () => {
   return (
