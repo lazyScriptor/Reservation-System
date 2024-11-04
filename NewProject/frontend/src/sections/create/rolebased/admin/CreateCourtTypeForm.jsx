@@ -7,6 +7,7 @@ import { CourtTypeContext } from "../../../../contexts/Contexts";
 import InputFieldCustomized, {
   SelectFieldCustomized,
 } from "../../../../components/InputFieldCustomized";
+import { decodeToken } from "../../../../contexts/helpers/helper";
 
 // Yup validation schema
 const courtSchema = yup.object().shape({
@@ -23,7 +24,11 @@ export default function CreateCourtTypeForm() {
   useEffect(() => {
     const fetchVenueNames = async () => {
       try {
-        const tenantId = localStorage.getItem("tenantId");
+        // Token handling for the API
+        const token = localStorage.getItem("accessToken");
+        const decodedTokenDetails = decodeToken(token);
+        const tenantId = decodedTokenDetails.payload.tenant_id;
+        
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/venue/name/${tenantId}`
         );
@@ -134,7 +139,7 @@ export default function CreateCourtTypeForm() {
             <label>Court Description</label>
             <p className="text-sm text-gray-500 py-2">
               Describe the court (optional). This may include dimensions,
-              surface type, etc.  (only visible to you)
+              surface type, etc. (only visible to you)
             </p>
             <InputFieldCustomized
               type="text"
@@ -148,23 +153,23 @@ export default function CreateCourtTypeForm() {
             )}
           </div>
 
-          <div className="h-20"/>
-            {/* Submit and Reset Buttons */}
-            <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
-              <button
-                className="bg-brandBlue/80 hover:bg-brandBlue p-2 px-8 text-white hover:bg-brandBlue-500 self-center"
-                type="submit"
-              >
-                Submit
-              </button>
-              <button
-                onClick={() => reset()}
-                className="bg-gray-300 p-2  text-white hover:bg-primary self-center"
-                type="reset"
-              >
-                Reset
-              </button>
-            </div>
+          <div className="h-20" />
+          {/* Submit and Reset Buttons */}
+          <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
+            <button
+              className="bg-brandBlue/80 hover:bg-brandBlue p-2 px-8 text-white hover:bg-brandBlue-500 self-center"
+              type="submit"
+            >
+              Submit
+            </button>
+            <button
+              onClick={() => reset()}
+              className="bg-gray-300 p-2  text-white hover:bg-primary self-center"
+              type="reset"
+            >
+              Reset
+            </button>
+          </div>
         </form>
       </div>
     </div>

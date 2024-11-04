@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CourtTypeContext } from "../Contexts"; // Ensure this is correctly imported
 import axios from "axios";
+import { decodeToken } from "../helpers/helper";
 
 // Provider component to pass down context value
 export function CourtTypeContextProvider({ children }) {
@@ -8,7 +9,12 @@ export function CourtTypeContextProvider({ children }) {
   const [venues, setVenues] = useState([]);
   const [courtTypes, setCourtTypes] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState("");
-  const [tenantId, setTenantId] = useState(localStorage.getItem("tenantId"));
+
+  const token = localStorage.getItem("accessToken");
+  const decodedTokenDetails = decodeToken(token);
+  const tenantIdRetrieved = decodedTokenDetails.payload.tenant_id;
+
+  const [tenantId, setTenantId] = useState(tenantIdRetrieved);
   const [courts, setCourts] = useState([]);
   const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
@@ -89,9 +95,12 @@ export function CourtTypeContextProvider({ children }) {
 
   // Listening to the tenant id
   useEffect(() => {
-    const storedTenantId = localStorage.getItem("tenantId");
-    if (storedTenantId !== tenantId) {
-      setTenantId(storedTenantId);
+    const token = localStorage.getItem("accessToken");
+    const decodedTokenDetails = decodeToken(token);
+    const tenantIdRetrieved = decodedTokenDetails.payload.tenant_id;
+
+    if (tenantIdRetrieved !== tenantId) {
+      setTenantId(tenantIdRetrieved);
     }
   }, [tenantId]);
 
@@ -154,9 +163,9 @@ export function CourtTypeContextProvider({ children }) {
       courtId: item.court_id,
       selectedDate: selectedDate,
     }));
-  
+
     setHolidayArray(newHolidayArray);
-  
+
     const getHolidayData = async () => {
       try {
         if (newHolidayArray.length > 0) {
@@ -165,24 +174,26 @@ export function CourtTypeContextProvider({ children }) {
             { holidayArray: newHolidayArray }
           );
           console.log("Holiday data response:", response.data);
-  
+
           // Ensure response.data is an array before setting state
           if (Array.isArray(response.data)) {
             setHolidayArray((prevArray) => [...prevArray, ...response.data]);
           } else {
-            console.error("Expected response data to be an array:", response.data);
+            console.error(
+              "Expected response data to be an array:",
+              response.data
+            );
           }
         }
       } catch (error) {
         console.error("Error fetching holiday data:", error);
       }
     };
-  
+
     if (newHolidayArray.length > 0) {
       getHolidayData();
     }
   }, [selectedDate, courts]);
-  
 
   return (
     <CourtTypeContext.Provider
