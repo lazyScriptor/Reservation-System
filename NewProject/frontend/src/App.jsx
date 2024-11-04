@@ -5,6 +5,9 @@ import AuthenticationProvider from "./contexts/providers/AuthenticationProvider"
 import CreateVenueBase from "./sections/create/rolebased/admin/CreateVenueBase";
 import CreateCourtBase from "./sections/create/rolebased/admin/CreateCourtBase";
 import CreateCourtTypeBase from "./sections/create/rolebased/admin/CreateCourtTypeBase";
+import CourtTypeContextProvider from "./contexts/providers/CourtTypeContextProvider";
+import Demo from './sections/demo/Demo'
+import Navbar from "./sections/Drawers/NavBar_bu";
 const LoginForm = lazy(() => import("./sections/login/LoginForm"));
 const Dashboard = lazy(() => import("./sections/dashboard/Dashboard"));
 const CustomSidebar = lazy(() => import("./sections/Drawers/CustomSidebar"));
@@ -17,6 +20,7 @@ function App() {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" element={<LoginForm />} />
+
           <Route
             path="/dashboard-admin"
             element={
@@ -64,13 +68,28 @@ function App() {
 
           <Route
             path="/reservation-admin"
+            element={<Drawer_ad2 number={4}>reservva</Drawer_ad2>}
+          />
+
+          <Route
+            path="/dashboard-client"
             element={
-              <Drawer_ad2 number={4}>
-                <p>Reservation admin</p>
-              </Drawer_ad2>
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
             }
           />
-          <Route path="/side" element={<CustomSidebar />} />
+          <Route
+            path="/demo-client"
+            element={
+              <>
+                <Navbar />
+                <Demo />
+              </>
+            }
+          />
+          <Route path="/side" element={<Navbar />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

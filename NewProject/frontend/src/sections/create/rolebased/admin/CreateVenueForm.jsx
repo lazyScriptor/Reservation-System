@@ -2,11 +2,9 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import InputFieldCustomized from '../../../../components/InputFieldCustomized'
+import InputFieldCustomized from "../../../../components/InputFieldCustomized";
 import axios from "axios";
 import { CourtTypeContext } from "../../../../contexts/Contexts";
-
-
 
 // Yup validation schema for the venue form
 const venueSchema = yup.object().shape({
@@ -60,10 +58,9 @@ export default function CreateVenueForm() {
 
   return (
     <div>
-      <div className="shadow-lg rounded-xl p-4  border-gray-100 border-2 relative">
-       
-          <h2 className="text-xl font-bold py-2 text-gray-500">Create Venue</h2>
-      
+      <div className="shadow-lg rounded-xl p-4  bg-white   border-gray-100 border-2 relative">
+        <h2 className="text-xl font-bold py-2 text-gray-500">Create Venue</h2>
+
         <div>
           <form
             className="flex flex-col py-2 gap-2"
@@ -126,7 +123,8 @@ export default function CreateVenueForm() {
             <div>
               <label>Contact Info</label>
               <p className="text-sm text-gray-500 py-2">
-                Add a phone number or email address for inquiries.This number will be displayed to the customer base
+                Add a phone number or email address for inquiries.This number
+                will be displayed to the customer base
               </p>
               <InputFieldCustomized
                 type="text"
@@ -192,7 +190,7 @@ export default function CreateVenueForm() {
                 <p className="text-red-500 h-6">{errors.status.message}</p>
               )}
             </div>
-              <div className="h-20"/>
+            <div className="h-20" />
             {/* Submit and Reset Buttons */}
             <div className="flex p-4 gap-4 self-center absolute bg-gray-100 bottom-0 w-full rounded-b-lg">
               <button

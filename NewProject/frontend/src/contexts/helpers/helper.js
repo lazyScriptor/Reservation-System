@@ -1,4 +1,5 @@
 export const decodeToken = (token) => {
+  
   try {
     // Split the token into its parts
     const [header, payload, signature] = token.split(".");

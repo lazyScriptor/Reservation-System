@@ -76,7 +76,7 @@ export default function CreateCourtTypeForm() {
 
   return (
     <div>
-      <div className="shadow-lg rounded-xl p-4 border-gray-100 border-2 relative ">
+      <div className="shadow-lg rounded-xl p-4  bg-white  border-gray-100 border-2 relative ">
         <h2 className="text-xl font-bold py-2 text-gray-500">
           Create Court Type
         </h2>

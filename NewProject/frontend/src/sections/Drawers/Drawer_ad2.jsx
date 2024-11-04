@@ -26,7 +26,8 @@ import { CiInboxIn } from "react-icons/ci";
 import { PiMailboxThin } from "react-icons/pi";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { RiReservedLine } from "react-icons/ri";
-const drawerWidth = 240;
+
+const drawerWidth = 200;
 
 const BUTTONARRAY = [
   {
@@ -70,7 +71,7 @@ const BUTTONARRAY = [
   {
     id: 3,
     name: "Logout",
-    navigation: "/reservation-admin",
+    navigation: "/",
     icon: <RxDashboard />,
   },
 ];
@@ -140,9 +141,6 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer({ children, number, subNumber }) {
-  React.useEffect(() => {
-    console.log("drawer");
-  }, []);
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [subButtonState, setSubButtontState] = React.useState(false);
@@ -166,17 +164,16 @@ export default function MiniDrawer({ children, number, subNumber }) {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[{ marginRight: 5 }, open && { display: "none" }]}
+            sx={{ marginRight: 2, display: open ? "none" : "inline-flex" }}
           >
             <MenuIcon />
           </IconButton>
-
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="close drawer"
             onClick={handleDrawerClose}
             edge="start"
-            sx={[{ marginRight: 5 }, !open && { display: "none" }]}
+            sx={{ marginRight: 2, display: !open ? "none" : "inline-flex" }}
           >
             <ArrowBackIosIcon />
           </IconButton>
@@ -188,103 +185,62 @@ export default function MiniDrawer({ children, number, subNumber }) {
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
+            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
           {BUTTONARRAY.map((item) => (
             <React.Fragment key={item.id}>
-              <ListItem
-                disablePadding
-                sx={{
-                  p: 1,
-                }}
-              >
+              <ListItem disablePadding sx={{ paddingX: 1 }}>
                 <ListItemButton
                   onClick={() => {
                     navigate(item.navigation);
-                    {
-                      item.children && setSubButtontState(!subButtonState);
-                    }
+                    if (item.children) setSubButtontState(!subButtonState);
                   }}
                   sx={{
-                    backgroundColor:
-                      item.id === number ? "#00aaff50" : "transparent",
+                    backgroundColor: item.id === number ? "#00aaff50" : "transparent",
                     justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                    borderRadius: 2,
+                    px: 1.5,
+                    borderRadius: 1,
                   }}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                      color: item.id === number ? "#00aaffff" : "",
-                    }}
-                  >
+                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
                     {item.icon}
                   </ListItemIcon>
                   {open && (
                     <>
                       <ListItemText
                         primary={item.name}
-                        sx={{
-                          color: item.id === number ? "#00aaffff" : "",
-                        }}
+                        primaryTypographyProps={{ fontSize: "0.875rem" }}
+                        sx={{ color: item.id === number ? "#00aaffff" : "" }}
                       />
-                      {item.children &&
-                        (subButtonState ? (
-                          <CiSquareChevUp />
-                        ) : (
-                          <CiSquareChevDown />
-                        ))}
+                      {item.children && (subButtonState ? <CiSquareChevUp /> : <CiSquareChevDown />)}
                     </>
                   )}
                 </ListItemButton>
               </ListItem>
 
-              {open &&
-                item.children &&
-                subButtonState &&
+              {open && item.children && subButtonState &&
                 item.children.map((child) => (
-                  <ListItem
-                    key={child.id}
-                    sx={{
-                      p: 1,
-                    }}
-                  >
+                  <ListItem key={child.id} sx={{ paddingX: 2 }}>
                     <ListItemButton
                       onClick={() => navigate(child.navigation)}
                       sx={{
                         justifyContent: open ? "initial" : "center",
-                        
-                        backgroundColor:
-                          child.id === subNumber ? "#00aaff50" : "transparent",
-                        borderRadius: 2,
-                        ml:3
+                        backgroundColor: child.id === subNumber ? "#00aaff50" : "transparent",
+                        borderRadius: 1,
+                        ml: 2,
+                        px: 1.5,
                       }}
                     >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : "auto",
-                          justifyContent: "center",
-                          color: child.id === subNumber ? "#00aaffff" : "",
-                        }}
-                      >
+                      <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
                         {child.icon}
                       </ListItemIcon>
                       <ListItemText
                         primary={child.name}
-                        sx={{
-                          color: child.id === subNumber ? "#00aaffff" : "",
-                        }}
+                        primaryTypographyProps={{ fontSize: "0.75rem" }}
+                        sx={{ color: child.id === subNumber ? "#00aaffff" : "" }}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -295,26 +251,21 @@ export default function MiniDrawer({ children, number, subNumber }) {
         <Divider />
         <List>
           {["All mail", "Trash", "Spam"].map((item, index) => (
-            <ListItem key={item} disablePadding sx={{ display: "block" }}>
+            <ListItem key={item} disablePadding sx={{ display: "block", paddingX: 1 }}>
               <ListItemButton
-                sx={[
-                  { minHeight: 48, px: 2.5 },
-                  open
-                    ? { justifyContent: "initial" }
-                    : { justifyContent: "center" },
-                ]}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 1.5,
+                }}
               >
-                <ListItemIcon
-                  sx={[
-                    { minWidth: 0, justifyContent: "center" },
-                    open ? { mr: 3 } : { mr: "auto" },
-                  ]}
-                >
-                  {index % 2 === 0 ? <PiMailboxThin /> : <CiInboxIn />}
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
+                  {index % 2 === 0 ? <CiInboxIn /> : <PiMailboxThin />}
                 </ListItemIcon>
                 <ListItemText
                   primary={item}
-                  sx={[open ? { opacity: 1 } : { opacity: 0 }]}
+                  primaryTypographyProps={{ fontSize: "0.875rem" }}
+                  sx={{ opacity: open ? 1 : 0 }}
                 />
               </ListItemButton>
             </ListItem>

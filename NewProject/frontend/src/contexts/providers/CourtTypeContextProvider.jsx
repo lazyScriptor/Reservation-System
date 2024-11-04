@@ -10,11 +10,13 @@ export function CourtTypeContextProvider({ children }) {
   const [courtTypes, setCourtTypes] = useState([]);
   const [selectedVenueId, setSelectedVenueId] = useState("");
 
+  
   const token = localStorage.getItem("accessToken");
+
   const decodedTokenDetails = decodeToken(token);
   const tenantIdRetrieved = decodedTokenDetails.payload.tenant_id;
-
   const [tenantId, setTenantId] = useState(tenantIdRetrieved);
+  
   const [courts, setCourts] = useState([]);
   const [openingHours, setOpeningHours] = useState(); // State for minimum opening hours
   const [closingHours, setClosingHours] = useState(); // State for maximum closing hours
