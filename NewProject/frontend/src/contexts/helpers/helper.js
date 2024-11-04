@@ -1,10 +1,5 @@
-import React from 'react'
-import joes from 'jose'
-
-function helper() {
-  return (
-    <div>helper</div>
-  )
-}
-
-export default helper
+import jwt from "jsonwebtoken";
+export const decodeToken = (token) => {
+  const decoded = jwt.decode(token);
+  console.log(decoded);
+};

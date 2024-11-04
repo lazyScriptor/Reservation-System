@@ -1,5 +1,5 @@
 import React from "react";
-import strip4Image from "../../assets/Strip4Image.png";
+import strip4Image from "../../assets/Strip4Image.webp";
 function Strip4() {
   return (
     <div className="py-8">

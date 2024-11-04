@@ -24,7 +24,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import { CiSquareChevUp, CiSquareChevDown } from "react-icons/ci";
 import { CiInboxIn } from "react-icons/ci";
 import { PiMailboxThin } from "react-icons/pi";
-
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 const drawerWidth = 240;
 
 const BUTTONARRAY = [
@@ -43,7 +43,13 @@ const BUTTONARRAY = [
       {
         id: 1,
         name: "Create Court",
-        navigation: "/create-courts-admin",
+        navigation: "/create-court-admin",
+        icon: <IoCreateOutline />,
+      },
+      {
+        id: 2,
+        name: "Create Venue",
+        navigation: "/create-venue-admin",
         icon: <IoCreateOutline />,
       },
     ],
@@ -150,6 +156,16 @@ export default function MiniDrawer({ children, number, subNumber }) {
             sx={[{ marginRight: 5 }, open && { display: "none" }]}
           >
             <MenuIcon />
+          </IconButton>
+
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerClose}
+            edge="start"
+            sx={[{ marginRight: 5 }, !open && { display: "none" }]}
+          >
+            <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
             Mini variant drawer

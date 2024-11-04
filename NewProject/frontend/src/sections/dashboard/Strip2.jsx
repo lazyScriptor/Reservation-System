@@ -1,10 +1,10 @@
 import React from "react";
 import ImageGridComponent from "./dashboardComponents/ImageGridComponent";
-import gridImage1 from "../../assets/gridImage1.jpg";
-import gridImage2 from "../../assets/gridImage2.jpg";
-import gridImage3 from "../../assets/gridImage3.jpg";
-import gridImage4 from "../../assets/gridImage4.jpg";
-import gridImage5 from "../../assets/gridImage5.jpg";
+import gridImage1 from "../../assets/gridImage1.webp";
+import gridImage2 from "../../assets/gridImage2.webp";
+import gridImage3 from "../../assets/gridImage3.webp";
+import gridImage4 from "../../assets/gridImage4.webp";
+import gridImage5 from "../../assets/gridImage5.webp";
 import Button1 from "../../components/Button1";
 const imageGridComponentDetails = [
   {

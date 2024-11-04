@@ -1,51 +1,65 @@
-import React, { useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import React, { useState, Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Drawer_ad2 from "./sections/Drawers/Drawer_ad2";
-import LoginForm from "./sections/login/LoginForm";
 import AuthenticationProvider from "./contexts/providers/AuthenticationProvider";
+
+const LoginForm = lazy(() => import("./sections/login/LoginForm"));
+const Dashboard = lazy(() => import("./sections/dashboard/Dashboard"));
+const CustomSidebar = lazy(() => import("./sections/Drawers/CustomSidebar"));
 
 function App() {
   const [count, setCount] = useState(0); // State lifted to the App component
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginForm />} />
-        <Route
-          path="/dashboard-admin"
-          element={
-            <Drawer_ad2 number={1}>
-              <AuthenticationProvider>
-                <p>Dashboard component</p>
-              </AuthenticationProvider>
-            </Drawer_ad2>
-          }
-        />
-        <Route
-          path="/courts-admin"
-          element={
-            <Drawer_ad2 number={2}>
-              <AuthenticationProvider>
-                <p>Courts Admin</p>
-              </AuthenticationProvider>
-            </Drawer_ad2>
-          }
-        />
-        <Route
-          path="/create-courts-admin"
-          element={
-            <Drawer_ad2 number={2} subNumber={1}>
-              <p>Create Court</p>
-            </Drawer_ad2>
-          }
-        />
-        {/* <Route path="/*" element={<ProtectedAdminRoutes />} /> */}
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<LoginForm />} />
+          <Route
+            path="/dashboard-admin"
+            element={
+              <Drawer_ad2 number={1}>
+                <AuthenticationProvider>
+                  <Dashboard />
+                </AuthenticationProvider>
+              </Drawer_ad2>
+            }
+          />
+          <Route
+            path="/courts-admin"
+            element={
+              <Drawer_ad2 number={2}>
+                <AuthenticationProvider>
+                  <p>Courts Admin</p>
+                </AuthenticationProvider>
+              </Drawer_ad2>
+            }
+          />
+          <Route
+            path="/create-court-admin"
+            element={
+              <Drawer_ad2 number={2} subNumber={1}>
+                <p>Create Court</p>
+              </Drawer_ad2>
+            }
+          />
+           <Route
+            path="/create-venue-admin"
+            element={
+              <Drawer_ad2 number={2} subNumber={2}>
+                <p>Create Court</p>
+              </Drawer_ad2>
+            }
+          />
+          <Route path="/side" element={<CustomSidebar />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
 
 export default App;
+
 
 const ProtectedAdminRoutes = () => {
   return (

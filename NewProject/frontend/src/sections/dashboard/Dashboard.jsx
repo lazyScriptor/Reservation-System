@@ -8,7 +8,7 @@ export default function Dashboard() {
   return (
     <div className=' bg-gray-200 text-gray-700'>
       <Strip1/>
-      <Strip2/>
+      {/* <Strip2/> */}
       <Strip3/>
       <Strip4/>
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import Strip1Image from "../../assets/Strip1Image.png";
+import Strip1Image from "../../assets/Strip1Image.webp"
 import Button1 from "../../components/Button1";
 function Strip1() {
   return (
