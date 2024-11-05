@@ -9,6 +9,8 @@ import CourtTypeContextProvider from "./contexts/providers/CourtTypeContextProvi
 import Demo from "./sections/demo/Demo";
 import Navbar from "./sections/Drawers/NavBar_bu";
 import Spinner from "./components/Spinner";
+import CustomerBase from "./sections/customers/CustomerBase";
+import ReservationBase from "./sections/customers/rolebased/client/ReservationBase";
 
 const LoginForm = lazy(() => import("./sections/login/LoginForm"));
 const Dashboard = lazy(() => import("./sections/dashboard/Dashboard"));
@@ -88,6 +90,24 @@ function App() {
               <>
                 <Navbar />
                 <Demo />
+              </>
+            }
+          />
+          <Route
+            path="/customers-basicuser"
+            element={
+              <>
+                <Navbar />
+                <CustomerBase />
+              </>
+            }
+          />
+          <Route
+            path="/reservations/:tenantId"
+            element={
+              <>
+                <Navbar />
+                <ReservationBase />
               </>
             }
           />
