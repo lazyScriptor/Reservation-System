@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import axios from "axios"; // Import Axios
 import { useNavigate } from "react-router-dom";
+import { decodeToken } from "../../contexts/helpers/helper";
 
 // Validation Schema
 const schema = Yup.object().shape({
@@ -37,10 +38,32 @@ export default function LoginForm() {
         { withCredentials: true }
       );
       if (response.data.authorizationStatus) {
-        navigate("/dashboard-admin");
         localStorage.setItem("accessToken", response.data.accessToken);
-
-        console.log("Login successful!", response.data);
+        const decodedDetails = decodeToken(response.data.accessToken).payload;
+        console.log(decodedDetails);
+        localStorage.setItem("userName", [
+          `${decodedDetails.first_name} 
+          ${decodedDetails.last_name}`,
+        ]);
+        localStorage.setItem("role", decodedDetails.role);
+        if (decodedDetails.user_type == "admin") {
+          console.log("This route has not been created yet");
+        } else if (
+          decodedDetails.role == "manager" &&
+          decodedDetails.user_type == "client"
+        ) {
+          navigate("/dashboard-admin");
+        } else if (
+          decodedDetails.role == "staff" &&
+          decodedDetails.user_type == "client"
+        ) {
+          console.log("This route has not been created yet");
+        } else if (
+          decodedDetails.role == "user" &&
+          decodedDetails.user_type == "client"
+        ) {
+          navigate("/dashboard-basicuser");
+        }
       } else {
         console.error(response.data.message);
       }

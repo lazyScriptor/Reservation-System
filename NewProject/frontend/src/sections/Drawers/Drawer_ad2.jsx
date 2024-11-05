@@ -178,14 +178,22 @@ export default function MiniDrawer({ children, number, subNumber }) {
             <ArrowBackIosIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Reservation System 
+          </Typography>
+          <Box flexGrow={1}/>
+          <Typography variant="h6" noWrap component="div">
+              {["Hello! " , localStorage.getItem("userName")]}
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -199,13 +207,20 @@ export default function MiniDrawer({ children, number, subNumber }) {
                     if (item.children) setSubButtontState(!subButtonState);
                   }}
                   sx={{
-                    backgroundColor: item.id === number ? "#00aaff50" : "transparent",
+                    backgroundColor:
+                      item.id === number ? "#00aaff50" : "transparent",
                     justifyContent: open ? "initial" : "center",
                     px: 1.5,
                     borderRadius: 1,
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 2 : "auto",
+                      justifyContent: "center",
+                    }}
+                  >
                     {item.icon}
                   </ListItemIcon>
                   {open && (
@@ -215,32 +230,48 @@ export default function MiniDrawer({ children, number, subNumber }) {
                         primaryTypographyProps={{ fontSize: "0.875rem" }}
                         sx={{ color: item.id === number ? "#00aaffff" : "" }}
                       />
-                      {item.children && (subButtonState ? <CiSquareChevUp /> : <CiSquareChevDown />)}
+                      {item.children &&
+                        (subButtonState ? (
+                          <CiSquareChevUp />
+                        ) : (
+                          <CiSquareChevDown />
+                        ))}
                     </>
                   )}
                 </ListItemButton>
               </ListItem>
 
-              {open && item.children && subButtonState &&
+              {open &&
+                item.children &&
+                subButtonState &&
                 item.children.map((child) => (
                   <ListItem key={child.id} sx={{ paddingX: 2 }}>
                     <ListItemButton
                       onClick={() => navigate(child.navigation)}
                       sx={{
                         justifyContent: open ? "initial" : "center",
-                        backgroundColor: child.id === subNumber ? "#00aaff50" : "transparent",
+                        backgroundColor:
+                          child.id === subNumber ? "#00aaff50" : "transparent",
                         borderRadius: 1,
                         ml: 2,
                         px: 1.5,
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: open ? 2 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
                         {child.icon}
                       </ListItemIcon>
                       <ListItemText
                         primary={child.name}
                         primaryTypographyProps={{ fontSize: "0.75rem" }}
-                        sx={{ color: child.id === subNumber ? "#00aaffff" : "" }}
+                        sx={{
+                          color: child.id === subNumber ? "#00aaffff" : "",
+                        }}
                       />
                     </ListItemButton>
                   </ListItem>
@@ -251,7 +282,11 @@ export default function MiniDrawer({ children, number, subNumber }) {
         <Divider />
         <List>
           {["All mail", "Trash", "Spam"].map((item, index) => (
-            <ListItem key={item} disablePadding sx={{ display: "block", paddingX: 1 }}>
+            <ListItem
+              key={item}
+              disablePadding
+              sx={{ display: "block", paddingX: 1 }}
+            >
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -259,7 +294,13 @@ export default function MiniDrawer({ children, number, subNumber }) {
                   px: 1.5,
                 }}
               >
-                <ListItemIcon sx={{ minWidth: 0, mr: open ? 2 : "auto", justifyContent: "center" }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 2 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
                   {index % 2 === 0 ? <CiInboxIn /> : <PiMailboxThin />}
                 </ListItemIcon>
                 <ListItemText

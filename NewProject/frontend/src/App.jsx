@@ -6,8 +6,10 @@ import CreateVenueBase from "./sections/create/rolebased/admin/CreateVenueBase";
 import CreateCourtBase from "./sections/create/rolebased/admin/CreateCourtBase";
 import CreateCourtTypeBase from "./sections/create/rolebased/admin/CreateCourtTypeBase";
 import CourtTypeContextProvider from "./contexts/providers/CourtTypeContextProvider";
-import Demo from './sections/demo/Demo'
+import Demo from "./sections/demo/Demo";
 import Navbar from "./sections/Drawers/NavBar_bu";
+import Spinner from "./components/Spinner";
+
 const LoginForm = lazy(() => import("./sections/login/LoginForm"));
 const Dashboard = lazy(() => import("./sections/dashboard/Dashboard"));
 const CustomSidebar = lazy(() => import("./sections/Drawers/CustomSidebar"));
@@ -17,7 +19,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Spinner />}>
         <Routes>
           <Route path="/" element={<LoginForm />} />
 
@@ -72,7 +74,7 @@ function App() {
           />
 
           <Route
-            path="/dashboard-client"
+            path="/dashboard-basicuser"
             element={
               <>
                 <Navbar />
@@ -81,7 +83,7 @@ function App() {
             }
           />
           <Route
-            path="/demo-client"
+            path="/demo-basicuser"
             element={
               <>
                 <Navbar />

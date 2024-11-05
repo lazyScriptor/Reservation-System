@@ -21,37 +21,37 @@ const navItems = [
   {
     id: 1,
     title: "Home",
-    navigation: "/dashboard-client",
+    navigation: "/dashboard-basicuser",
   },
   {
     id: 2,
     title: "Features",
-    navigation: "/features-client",
+    navigation: "/features-basicuser",
   },
   {
     id: 3,
     title: "Products",
-    navigation: "/products-client",
+    navigation: "/products-basicuser",
   },
   {
     id: 4,
     title: "Demo",
-    navigation: "/demo-client",
+    navigation: "/demo-basicuser",
   },
   {
     id: 5,
     title: "Customers",
-    navigation: "/customers-client",
+    navigation: "/customers-basicuser",
   },
   {
     id: 6,
     title: "Pricing",
-    navigation: "/pricing-client",
+    navigation: "/pricing-basicuser",
   },
   {
     id: 7,
     title: "Contact",
-    navigation: "/contact-client",
+    navigation: "/contact-basicuser",
   },
   {
     id: 8,
